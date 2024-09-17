@@ -20,6 +20,8 @@ struct ContentView: View {
     @State private var classList: [String] = []
     @State private var newClassName: String = ""
     @State private var selectedClass: String?
+    @State private var foldersInProject: [String] = []
+    @State private var selectedFolder: String?
 
     var body: some View {
         VStack {
@@ -58,20 +60,52 @@ struct ContentView: View {
                         .padding()
                     Text("\(Int(loadingProgress * 100))% завершено")
                 }
-            } else if !thumbnailURLs.isEmpty {
+            } else if projectURL != nil {
                 HStack {
                     // Левая часть: миниатюры изображений
-                    ScrollView {
-                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))]) {
-                            ForEach(thumbnailURLs, id: \.self) { url in
-                                Button(action: {
-                                    self.selectedImageURL = getImageURL(forThumbnailURL: url)
-                                }) {
-                                    AsyncImageView(url: url, size: CGSize(width: 100, height: 100))
-                                        .padding(5)
-                                        .border(selectedImageURL == getImageURL(forThumbnailURL: url) ? Color.blue : Color.clear, width: 2)
+                    VStack {
+                        // Список папок
+                        ScrollView(.vertical) {
+                            VStack {
+                                ForEach(foldersInProject, id: \.self) { folderName in
+                                    Button(action: {
+                                        self.selectedFolder = folderName
+                                        loadImagesForSelectedFolder()
+                                    }) {
+                                        Text(folderName)
+                                            .padding(.horizontal)
+                                            
+                                            .foregroundColor(selectedFolder == folderName ? Color.red : Color.gray)
+                                            .bold()
+                                            .cornerRadius(5)
+                                    }
                                 }
-                                .buttonStyle(PlainButtonStyle())
+                                
+                            }
+                            
+                        }
+                        
+                        .padding()
+
+                        // Кнопка для добавления новой папки
+                        Button(action: addImageFolder) {
+                            Text("Добавить папку с изображениями")
+                        }
+                        .padding()
+
+                        // Остальной код для отображения миниатюр изображений
+                        ScrollView(.vertical) {
+                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))]) {
+                                ForEach(thumbnailURLs, id: \.self) { url in
+                                    Button(action: {
+                                        self.selectedImageURL = getImageURL(forThumbnailURL: url)
+                                    }) {
+                                        AsyncImageView(url: url, size: CGSize(width: 100, height: 100))
+                                            .padding(5)
+                                            .border(selectedImageURL == getImageURL(forThumbnailURL: url) ? Color.blue : Color.clear, width: 2)
+                                    }
+                                    .buttonStyle(PlainButtonStyle())
+                                }
                             }
                         }
                     }
@@ -144,55 +178,68 @@ struct ContentView: View {
     
     
     func createNewProject() {
-         let dialog = NSOpenPanel()
-         dialog.title = "Выберите папку с изображениями"
-         dialog.canChooseDirectories = true
-         dialog.canChooseFiles = false
-         dialog.allowsMultipleSelection = false
+        let savePanel = NSSavePanel()
+        savePanel.title = "Выберите папку для сохранения проекта"
+        savePanel.canCreateDirectories = true
+        savePanel.nameFieldStringValue = "Новый проект"
 
-         if dialog.runModal() == .OK, let imagesFolderURL = dialog.url {
-             // Создаем папку проекта
-             let savePanel = NSSavePanel()
-             savePanel.title = "Сохранить проект как"
-             savePanel.canCreateDirectories = true
-             savePanel.nameFieldStringValue = "Новый проект"
+        if savePanel.runModal() == .OK, let projectFolderURL = savePanel.url {
+            self.projectURL = projectFolderURL
 
-             if savePanel.runModal() == .OK, let projectFolderURL = savePanel.url {
-                 do {
-                     try FileManager.default.createDirectory(at: projectFolderURL, withIntermediateDirectories: true, attributes: nil)
-                     self.projectURL = projectFolderURL
+            // Создаем структуру папок внутри проекта
+            do {
+                let imagesFolderURL = projectFolderURL.appendingPathComponent("images")
+                let annotationsFolderURL = projectFolderURL.appendingPathComponent("annotations")
+                let settingsFolderURL = projectFolderURL.appendingPathComponent("settings")
 
-                     // Копируем изображения в папку проекта
-                     let imagesDestinationURL = projectFolderURL.appendingPathComponent("images")
-                     try FileManager.default.createDirectory(at: imagesDestinationURL, withIntermediateDirectories: true, attributes: nil)
-                     let imageFiles = try FileManager.default.contentsOfDirectory(at: imagesFolderURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
-                     for imageFile in imageFiles {
-                         let destinationURL = imagesDestinationURL.appendingPathComponent(imageFile.lastPathComponent)
-                         try FileManager.default.copyItem(at: imageFile, to: destinationURL)
-                     }
+                try FileManager.default.createDirectory(at: imagesFolderURL, withIntermediateDirectories: true, attributes: nil)
+                try FileManager.default.createDirectory(at: annotationsFolderURL, withIntermediateDirectories: true, attributes: nil)
+                try FileManager.default.createDirectory(at: settingsFolderURL, withIntermediateDirectories: true, attributes: nil)
 
-                     projectURL = projectFolderURL
-                     loadImages(from: imagesFolderURL)
-                     // Очищаем список классов и аннотаций
-                     self.classList = []
-                     self.annotations = []
+                // Инициализируем пустые данные проекта
+                self.imageURLs = []
+                self.thumbnailURLs = []
+                self.selectedImageURL = nil
+                self.classList = []
+                self.annotations = []
+                self.foldersInProject = []
 
-                     // Сохраняем пустые файлы классов и аннотаций
-                     saveClassListToFile()
-                     saveAnnotationsToFile()
-                   
+                // Сохраняем настройки проекта (если необходимо)
+                saveProjectSettings()
 
-                 } catch {
-                     print("Ошибка при создании проекта: \(error.localizedDescription)")
-                 }
-             }
-         }
-     }
+            } catch {
+                print("Ошибка при создании структуры проекта: \(error.localizedDescription)")
+            }
+        }
+    }
     
     
-    
-    
+    func openProject() {
+        let dialog = NSOpenPanel()
+        dialog.title = "Выберите папку проекта"
+        dialog.canChooseDirectories = true
+        dialog.canChooseFiles = false
+        dialog.allowsMultipleSelection = false
 
+        if dialog.runModal() == .OK, let projectFolderURL = dialog.url {
+            self.projectURL = projectFolderURL
+
+            // Загружаем настройки проекта
+            loadProjectSettings()
+
+            // Загружаем список классов и аннотаций
+            loadClassListFromFile()
+            loadAnnotationsFromFile()
+
+            // Если выбрана папка, загружаем изображения
+            if selectedFolder != nil {
+                loadImagesForSelectedFolder()
+            }
+        }
+    }
+    
+    
+/*
     func openProject() {
         let dialog = NSOpenPanel()
         dialog.title = "Выберите папку проекта"
@@ -242,9 +289,47 @@ struct ContentView: View {
             }
         }
     }
+    
+ */
+    
+    
+    func addImageFolder() {
+        let openPanel = NSOpenPanel()
+        openPanel.title = "Выберите папку с изображениями для добавления в проект"
+        openPanel.canChooseFiles = false
+        openPanel.canChooseDirectories = true
+        openPanel.allowsMultipleSelection = false
+
+        if openPanel.runModal() == .OK, let sourceFolderURL = openPanel.url, let projectURL = self.projectURL {
+            do {
+                let folderName = sourceFolderURL.lastPathComponent
+                let destinationFolderURL = projectURL.appendingPathComponent("images").appendingPathComponent(folderName)
+
+                // Копируем папку с изображениями в проект
+                try FileManager.default.copyItem(at: sourceFolderURL, to: destinationFolderURL)
+
+                // Добавляем папку в список папок проекта
+                self.foldersInProject.append(folderName)
+                saveProjectSettings()
+
+                // Обновляем список изображений, если эта папка выбрана
+                if selectedFolder == folderName {
+                    loadImages(from: destinationFolderURL)
+                }
+
+            } catch {
+                print("Ошибка при добавлении папки с изображениями: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    func loadImagesForSelectedFolder() {
+        guard let projectURL = projectURL, let selectedFolder = selectedFolder else { return }
+        let folderURL = projectURL.appendingPathComponent("images").appendingPathComponent(selectedFolder)
+        loadImages(from: folderURL)
+    }
 
     func loadImages(from url: URL) {
-        // Загрузка изображений из указанной папки
         DispatchQueue.global(qos: .userInitiated).async {
             let fileManager = FileManager.default
             let keys: [URLResourceKey] = [.isDirectoryKey]
@@ -272,14 +357,13 @@ struct ContentView: View {
     }
 
     func createThumbnails() {
-        // Создание миниатюр для изображений
-        guard let projectURL = projectURL else { return }
+        guard let projectURL = projectURL, let selectedFolder = selectedFolder else { return }
 
         isCreatingThumbnails = true
         creationProgress = 0.0
 
         DispatchQueue.global(qos: .userInitiated).async {
-            let thumbnailFolderURL = projectURL.appendingPathComponent("thumbnails")
+            let thumbnailFolderURL = projectURL.appendingPathComponent("thumbnails").appendingPathComponent(selectedFolder)
             let fileManager = FileManager.default
 
             if !fileManager.fileExists(atPath: thumbnailFolderURL.path) {
@@ -315,14 +399,13 @@ struct ContentView: View {
     }
 
     func loadThumbnails() {
-        // Загрузка миниатюр из папки
-        guard let projectURL = projectURL else { return }
+        guard let projectURL = projectURL, let selectedFolder = selectedFolder else { return }
 
         isLoadingThumbnails = true
         loadingProgress = 0.0
 
         DispatchQueue.global(qos: .userInitiated).async {
-            let thumbnailFolderURL = projectURL.appendingPathComponent("thumbnails")
+            let thumbnailFolderURL = projectURL.appendingPathComponent("thumbnails").appendingPathComponent(selectedFolder)
             let fileManager = FileManager.default
 
             do {
@@ -377,9 +460,9 @@ struct ContentView: View {
     
 
     func getImageURL(forThumbnailURL thumbnailURL: URL) -> URL {
-        // Получение оригинального URL изображения по URL миниатюры
-        guard let projectURL = projectURL else { return thumbnailURL }
-        let imageURL = projectURL.appendingPathComponent(thumbnailURL.lastPathComponent)
+        guard let projectURL = projectURL, let selectedFolder = selectedFolder else { return thumbnailURL }
+        let imageName = thumbnailURL.lastPathComponent
+        let imageURL = projectURL.appendingPathComponent("images").appendingPathComponent(selectedFolder).appendingPathComponent(imageName)
         return imageURL
     }
 
@@ -438,6 +521,35 @@ struct ContentView: View {
             }
         } catch {
             print("Ошибка при сохранении списка классов: \(error.localizedDescription)")
+        }
+    }
+    
+    func saveProjectSettings() {
+        guard let projectURL = projectURL else { return }
+        let settingsURL = projectURL.appendingPathComponent("settings").appendingPathComponent("projectSettings.json")
+
+        let projectSettings = ProjectSettings(foldersInProject: foldersInProject, selectedFolder: selectedFolder)
+        do {
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(projectSettings)
+            try data.write(to: settingsURL)
+        } catch {
+            print("Ошибка при сохранении настроек проекта: \(error.localizedDescription)")
+        }
+    }
+
+    func loadProjectSettings() {
+        guard let projectURL = projectURL else { return }
+        let settingsURL = projectURL.appendingPathComponent("settings").appendingPathComponent("projectSettings.json")
+
+        do {
+            let data = try Data(contentsOf: settingsURL)
+            let decoder = JSONDecoder()
+            let projectSettings = try decoder.decode(ProjectSettings.self, from: data)
+            self.foldersInProject = projectSettings.foldersInProject
+            self.selectedFolder = projectSettings.selectedFolder
+        } catch {
+            print("Ошибка при загрузке настроек проекта: \(error.localizedDescription)")
         }
     }
     
