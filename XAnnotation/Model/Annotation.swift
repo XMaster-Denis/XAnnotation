@@ -13,7 +13,7 @@ struct AnnotationData: Codable, Hashable {
 }
 
 struct Annotation: Codable, Hashable {
-    var label: String
+    var mlClass: ClassData
     var coordinates: Coordinates
 }
 

@@ -17,11 +17,12 @@ struct ContentView: View {
     @State private var creationProgress: Double = 0.0
     @State private var loadingProgress: Double = 0.0
     @State private var annotations: [AnnotationData] = []
-    @State private var classList: [String] = []
+    @State private var classList: [ClassData] = []
     @State private var newClassName: String = ""
-    @State private var selectedClass: String?
+    @State private var selectedClass: ClassData?
     @State private var foldersInProject: [String] = []
     @State private var selectedFolder: String?
+    @State private var editingClassID: UUID? = nil
 
     var body: some View {
         VStack {
@@ -63,35 +64,39 @@ struct ContentView: View {
             } else if projectURL != nil {
                 HStack {
                     // Левая часть: миниатюры изображений
+                    Divider()
                     VStack {
                         // Список папок
+                        
                         ScrollView(.vertical) {
-                            VStack {
+                            VStack(alignment: .leading) {
                                 ForEach(foldersInProject, id: \.self) { folderName in
                                     Button(action: {
                                         self.selectedFolder = folderName
                                         loadImagesForSelectedFolder()
                                     }) {
                                         Text(folderName)
-                                            .padding(.horizontal)
-                                            
-                                            .foregroundColor(selectedFolder == folderName ? Color.red : Color.gray)
+                                            //.foregroundColor(selectedFolder == folderName ? Color.red : Color.gray)
                                             .bold()
                                             .cornerRadius(5)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            
                                     }
+                                    .background(selectedFolder == folderName ? Color.blue.opacity(1) : Color.clear)
                                 }
+                                
                                 
                             }
                             
                         }
-                        
-                        .padding()
+                        .frame(maxHeight: 200)
+                       // .padding()
 
                         // Кнопка для добавления новой папки
                         Button(action: addImageFolder) {
                             Text("Добавить папку с изображениями")
                         }
-                        .padding()
+                        //.padding()
 
                         // Остальной код для отображения миниатюр изображений
                         ScrollView(.vertical) {
@@ -110,7 +115,7 @@ struct ContentView: View {
                         }
                     }
                     .frame(minWidth: 100, maxWidth: 150)
-                    .padding()
+                    //.padding()
 
                     Divider()
 
@@ -137,13 +142,52 @@ struct ContentView: View {
                     VStack(alignment: .leading) {
                         Text("Список классов:")
                             .font(.headline)
-                        List(selection: $selectedClass) {
-                            ForEach(classList, id: \.self) { className in
-                                Text(className)
-                                    .tag(className)
+                        
+                        List {
+                            ForEach(classList) { classData in
+                                HStack {
+                                    Text(classData.name)
+                                        .foregroundColor(selectedClass?.id == classData.id ? Color.red : Color.primary)
+                                        .bold(selectedClass?.id == classData.id)
+                                    
+                                    Spacer()
+                                    
+                                    // Цветной прямоугольник
+                                    Rectangle()
+                                        .fill(classData.color.toColor())
+                                        .frame(width: 30, height: 20)
+                                        .cornerRadius(3)
+                                        .onTapGesture {
+                                            editingClassID = classData.id
+                                        }
+                                        .popover(isPresented: Binding<Bool>(
+                                            get: { editingClassID == classData.id },
+                                            set: { if !$0 { editingClassID = nil } }
+                                        )) {
+                                            VStack {
+                                                ColorPicker("Выберите цвет", selection: Binding(
+                                                    get: { classData.color.toColor() },
+                                                    set: { newColor in
+                                                        if let index = classList.firstIndex(where: { $0.id == classData.id }) {
+                                                            classList[index].color = ColorData.fromColor(newColor)
+                                                            saveClassListToFile()
+                                                        }
+                                                    }
+                                                ))
+                                                Button("Закрыть") {
+                                                    editingClassID = nil
+                                                }
+                                                .padding(.top)
+                                            }
+                                            .padding()
+                                            .frame(width: 300, height: 200)
+                                        }
+                                }
+                                .padding(.vertical, 5)
                             }
                             .onDelete(perform: deleteClass)
                         }
+                        
                         VStack {
                             TextField("Добавить класс", text: $newClassName)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -152,16 +196,17 @@ struct ContentView: View {
                             }
                         }
                         .padding()
+                        
                         if selectedClass == nil {
                             Text("Пожалуйста, выберите класс для аннотирования.")
                                 .foregroundColor(.red)
                         } else {
-                            Text("Текущий выбранный класс: \(selectedClass!)")
+                            Text("Текущий выбранный класс: \(selectedClass!.name)")
                                 .foregroundColor(.green)
                         }
                     }
                     .padding()
-                    .frame(maxWidth: 250)
+                    .frame(width: 250)
                 }
             } else {
                 Spacer()
@@ -468,16 +513,40 @@ struct ContentView: View {
 
     // Управление классами
 
+//    func addClass() {
+//        let trimmedClassName = newClassName.trimmingCharacters(in: .whitespacesAndNewlines)
+//        if !trimmedClassName.isEmpty && !classList.contains(trimmedClassName) {
+//            classList.append(trimmedClassName)
+//            newClassName = ""
+//            saveClassListToFile() // Сохраняем список классов
+//
+//            // Если ни один класс не выбран, выбираем только что добавленный
+//            if selectedClass == nil {
+//                selectedClass = trimmedClassName
+//            }
+//        }
+//    }
+    
+    
     func addClass() {
         let trimmedClassName = newClassName.trimmingCharacters(in: .whitespacesAndNewlines)
-        if !trimmedClassName.isEmpty && !classList.contains(trimmedClassName) {
-            classList.append(trimmedClassName)
+        if !trimmedClassName.isEmpty && !classList.contains(where: { $0.name == trimmedClassName }) {
+            // Генерируем случайный цвет
+            let randomColor = ColorData(red: Double.random(in: 0...1), green: Double.random(in: 0...1), blue: Double.random(in: 0...1))
+            
+            // Создаем новый класс с цветом
+            let newClass = ClassData(name: trimmedClassName, color: randomColor)
+            classList.append(newClass)
+            
+            // Очищаем поле для ввода
             newClassName = ""
-            saveClassListToFile() // Сохраняем список классов
+            
+            // Сохраняем список классов
+            saveClassListToFile()
 
             // Если ни один класс не выбран, выбираем только что добавленный
             if selectedClass == nil {
-                selectedClass = trimmedClassName
+                selectedClass = newClass
             }
         }
     }
@@ -495,9 +564,9 @@ struct ContentView: View {
                 let classesFileURL = projectURL.appendingPathComponent("classes.json")
                 let jsonData = try Data(contentsOf: classesFileURL)
                 let decoder = JSONDecoder()
-                self.classList = try decoder.decode([String].self, from: jsonData)
+                self.classList = try decoder.decode([ClassData].self, from: jsonData)
                 print("Список классов загружен из файла.")
-
+                
                 // Устанавливаем выбранный класс, если он не установлен
                 if selectedClass == nil, let firstClass = classList.first {
                     selectedClass = firstClass

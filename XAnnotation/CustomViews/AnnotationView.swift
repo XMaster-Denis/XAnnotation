@@ -11,8 +11,8 @@ import SwiftUI
 struct AnnotationView: View {
     let imageURL: URL
     @Binding var annotations: [AnnotationData]
-    @Binding var classList: [String]
-    @Binding var selectedClass: String?
+    @Binding var classList: [ClassData]
+    @Binding var selectedClass: ClassData?
     var saveAnnotations: () -> Void
 
     @State private var currentRect: CGRect = .zero
@@ -79,7 +79,35 @@ struct AnnotationView: View {
                     // Drawing current rectangle
                     if isDrawing {
                         Rectangle()
-                            .stroke(Color.red, lineWidth: 2)
+                            .stroke(LinearGradient(
+                                gradient: Gradient(stops: [
+                                    .init(color: .white, location: 0.0),
+                                    .init(color: .blue, location: 0.01),
+                                    .init(color: .orange, location: 0.05),
+                                    .init(color: .yellow, location: 0.1),
+                                    .init(color: .green, location: 0.15),
+                                    .init(color: .blue, location: 0.2),
+                                    .init(color: .purple, location: 0.25),
+                                    .init(color: .red, location: 0.3),
+                                    .init(color: .orange, location: 0.35),
+                                    .init(color: .yellow, location: 0.4),
+                                    .init(color: .green, location: 0.45),
+                                    .init(color: .blue, location: 0.5),
+                                    .init(color: .red, location: 0.55),
+                                    .init(color: .orange, location: 0.6),
+                                    .init(color: .yellow, location: 0.65),
+                                    .init(color: .green, location: 0.7),
+                                    .init(color: .blue, location: 0.75),
+                                    .init(color: .purple, location: 0.8),
+                                    .init(color: .red, location: 0.85),
+                                    .init(color: .orange, location: 0.9),
+                                    .init(color: .yellow, location: 0.95),
+                                    .init(color: .green, location: 0.98),
+                                    .init(color: .blue, location: 1.0)
+                                ]),
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ), lineWidth: 2)
                             .frame(
                                 width: abs(currentRect.size.width),
                                 height: abs(currentRect.size.height)
@@ -99,13 +127,22 @@ struct AnnotationView: View {
                             height: annotation.coordinates.height / imageScale
                         )
                         Rectangle()
-                            .stroke(Color.green, lineWidth: 2)
+                            .stroke(annotation.mlClass.color.toColor(), lineWidth: 2)
+//                            .stroke(Color.green, lineWidth: 2)
                             .frame(width: annotationRect.width, height: annotationRect.height)
                             .position(
                                 x: annotationRect.midX + imageOrigin.x,
                                 y: annotationRect.midY + imageOrigin.y
                             )
                     }
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
                 } else {
                     Text("Не удалось загрузить изображение")
                         .foregroundColor(.red)
@@ -136,7 +173,7 @@ struct AnnotationView: View {
         let normalizedHeight = currentRect.size.height * imageScale
 
         let newAnnotation = Annotation(
-            label: selectedClass,
+            mlClass: selectedClass,
             coordinates: Coordinates(
                 x: normalizedX,
                 y: normalizedY,
