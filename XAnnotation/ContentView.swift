@@ -18,12 +18,10 @@ struct ContentView: View {
     @State private var loadingProgress: Double = 0.0
     @State private var annotations: [AnnotationData] = []
     @State private var classList: [ClassData] = []
-    @State private var newClassName: String = ""
-    @State private var selectedClass: ClassData?
+    @State private var selectedClass: ClassData? = nil
     @State private var foldersInProject: [String] = []
     @State private var selectedFolder: String?
-    @State private var editingClassID: UUID? = nil
-
+    
     var body: some View {
         VStack {
             // Верхние кнопки
@@ -32,12 +30,12 @@ struct ContentView: View {
                     createNewProject()
                 }
                 .padding()
-
+    
                 Button("Открыть проект") {
                     openProject()
                 }
                 .padding()
-
+    
                 if !annotations.isEmpty {
                     Button("Сохранить аннотации") {
                         saveAnnotationsToFile()
@@ -45,7 +43,7 @@ struct ContentView: View {
                     .padding()
                 }
             }
-
+    
             // Основной контент
             if isCreatingThumbnails {
                 // Отображение индикатора прогресса при создании миниатюр
@@ -67,7 +65,7 @@ struct ContentView: View {
                     Divider()
                     VStack {
                         // Список папок
-                        
+    
                         ScrollView(.vertical) {
                             VStack(alignment: .leading) {
                                 ForEach(foldersInProject, id: \.self) { folderName in
@@ -76,29 +74,22 @@ struct ContentView: View {
                                         loadImagesForSelectedFolder()
                                     }) {
                                         Text(folderName)
-                                            //.foregroundColor(selectedFolder == folderName ? Color.red : Color.gray)
                                             .bold()
                                             .cornerRadius(5)
                                             .frame(maxWidth: .infinity, alignment: .leading)
-                                            
                                     }
                                     .background(selectedFolder == folderName ? Color.blue.opacity(1) : Color.clear)
                                 }
-                                
-                                
                             }
-                            
                         }
                         .frame(maxHeight: 200)
-                       // .padding()
-
+    
                         // Кнопка для добавления новой папки
                         Button(action: addImageFolder) {
                             Text("Добавить папку с изображениями")
                         }
-                        //.padding()
-
-                        // Остальной код для отображения миниатюр изображений
+    
+                        // Отображение миниатюр изображений
                         ScrollView(.vertical) {
                             LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))]) {
                                 ForEach(thumbnailURLs, id: \.self) { url in
@@ -115,10 +106,9 @@ struct ContentView: View {
                         }
                     }
                     .frame(minWidth: 100, maxWidth: 150)
-                    //.padding()
-
+    
                     Divider()
-
+    
                     // Центральная часть: аннотирование изображения
                     VStack {
                         if let selectedImageURL = selectedImageURL {
@@ -135,78 +125,16 @@ struct ContentView: View {
                         }
                     }
                     .frame(minWidth: 400, maxWidth: .infinity)
-
+    
                     Divider()
-
-                    // Правая часть: список классов
-                    VStack(alignment: .leading) {
-                        Text("Список классов:")
-                            .font(.headline)
-                        
-                        List {
-                            ForEach(classList) { classData in
-                                HStack {
-                                    Text(classData.name)
-                                        .foregroundColor(selectedClass?.id == classData.id ? Color.red : Color.primary)
-                                        .bold(selectedClass?.id == classData.id)
-                                    
-                                    Spacer()
-                                    
-                                    // Цветной прямоугольник
-                                    Rectangle()
-                                        .fill(classData.color.toColor())
-                                        .frame(width: 30, height: 20)
-                                        .cornerRadius(3)
-                                        .onTapGesture {
-                                            editingClassID = classData.id
-                                        }
-                                        .popover(isPresented: Binding<Bool>(
-                                            get: { editingClassID == classData.id },
-                                            set: { if !$0 { editingClassID = nil } }
-                                        )) {
-                                            VStack {
-                                                ColorPicker("Выберите цвет", selection: Binding(
-                                                    get: { classData.color.toColor() },
-                                                    set: { newColor in
-                                                        if let index = classList.firstIndex(where: { $0.id == classData.id }) {
-                                                            classList[index].color = ColorData.fromColor(newColor)
-                                                            saveClassListToFile()
-                                                        }
-                                                    }
-                                                ))
-                                                Button("Закрыть") {
-                                                    editingClassID = nil
-                                                }
-                                                .padding(.top)
-                                            }
-                                            .padding()
-                                            .frame(width: 300, height: 200)
-                                        }
-                                }
-                                .padding(.vertical, 5)
-                            }
-                            .onDelete(perform: deleteClass)
-                        }
-                        
-                        VStack {
-                            TextField("Добавить класс", text: $newClassName)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                            Button(action: addClass) {
-                                Text("Добавить")
-                            }
-                        }
-                        .padding()
-                        
-                        if selectedClass == nil {
-                            Text("Пожалуйста, выберите класс для аннотирования.")
-                                .foregroundColor(.red)
-                        } else {
-                            Text("Текущий выбранный класс: \(selectedClass!.name)")
-                                .foregroundColor(.green)
-                        }
-                    }
-                    .padding()
-                    .frame(width: 250)
+    
+                    // Правая часть: список классов (заменяем на ClassListView)
+                    ClassListView(
+                        classList: $classList,
+                        selectedClass: $selectedClass,
+                        saveClassListToFile: saveClassListToFile,
+                        saveProjectSettings: saveProjectSettings
+                    )
                 }
             } else {
                 Spacer()
@@ -218,10 +146,8 @@ struct ContentView: View {
         .frame(minWidth: 800, minHeight: 600)
     }
 
-    // Функции для управления проектом и аннотациями
+    // MARK: - Функции для управления проектом и аннотациями
 
-    
-    
     func createNewProject() {
         let savePanel = NSSavePanel()
         savePanel.title = "Выберите папку для сохранения проекта"
@@ -282,62 +208,9 @@ struct ContentView: View {
             }
         }
     }
-    
-    
-/*
-    func openProject() {
-        let dialog = NSOpenPanel()
-        dialog.title = "Выберите папку проекта"
-        dialog.canChooseDirectories = true
-        dialog.canChooseFiles = false
-        dialog.allowsMultipleSelection = false
 
-        if dialog.runModal() == .OK, let projectFolderURL = dialog.url {
-            self.projectURL = projectFolderURL
 
-            // Загружаем список классов
-            loadClassListFromFile()
 
-            // Загружаем аннотации
-            loadAnnotationsFromFile()
-
-            let thumbnailsDestinationURL = projectFolderURL.appendingPathComponent("thumbnails")
-            self.isLoadingThumbnails = true
-            self.loadingProgress = 0.0
-
-            DispatchQueue.global(qos: .userInitiated).async {
-                do {
-                    let thumbnailFiles = try FileManager.default.contentsOfDirectory(at: thumbnailsDestinationURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
-                    let totalCount = thumbnailFiles.count
-                    var loadedCount = 0
-                    var loadedThumbnails: [URL] = []
-
-                    for url in thumbnailFiles {
-                        loadedThumbnails.append(url)
-                        loadedCount += 1
-                        let progress = Double(loadedCount) / Double(totalCount)
-                        DispatchQueue.main.async {
-                            self.loadingProgress = progress
-                        }
-                    }
-
-                    DispatchQueue.main.async {
-                        self.thumbnailURLs = loadedThumbnails
-                        self.isLoadingThumbnails = false
-                    }
-                } catch {
-                    print("Ошибка при загрузке миниатюр: \(error.localizedDescription)")
-                    DispatchQueue.main.async {
-                        self.isLoadingThumbnails = false
-                    }
-                }
-            }
-        }
-    }
-    
- */
-    
-    
     func addImageFolder() {
         let openPanel = NSOpenPanel()
         openPanel.title = "Выберите папку с изображениями для добавления в проект"
@@ -499,10 +372,8 @@ struct ContentView: View {
             print("Ошибка при загрузке аннотаций: \(error.localizedDescription)")
         }
     }
-    
-    
-    
-    
+
+
 
     func getImageURL(forThumbnailURL thumbnailURL: URL) -> URL {
         guard let projectURL = projectURL, let selectedFolder = selectedFolder else { return thumbnailURL }
@@ -513,51 +384,16 @@ struct ContentView: View {
 
     // Управление классами
 
-//    func addClass() {
-//        let trimmedClassName = newClassName.trimmingCharacters(in: .whitespacesAndNewlines)
-//        if !trimmedClassName.isEmpty && !classList.contains(trimmedClassName) {
-//            classList.append(trimmedClassName)
-//            newClassName = ""
-//            saveClassListToFile() // Сохраняем список классов
-//
-//            // Если ни один класс не выбран, выбираем только что добавленный
-//            if selectedClass == nil {
-//                selectedClass = trimmedClassName
-//            }
-//        }
-//    }
-    
-    
     func addClass() {
-        let trimmedClassName = newClassName.trimmingCharacters(in: .whitespacesAndNewlines)
-        if !trimmedClassName.isEmpty && !classList.contains(where: { $0.name == trimmedClassName }) {
-            // Генерируем случайный цвет
-            let randomColor = ColorData(red: Double.random(in: 0...1), green: Double.random(in: 0...1), blue: Double.random(in: 0...1))
-            
-            // Создаем новый класс с цветом
-            let newClass = ClassData(name: trimmedClassName, color: randomColor)
-            classList.append(newClass)
-            
-            // Очищаем поле для ввода
-            newClassName = ""
-            
-            // Сохраняем список классов
-            saveClassListToFile()
-
-            // Если ни один класс не выбран, выбираем только что добавленный
-            if selectedClass == nil {
-                selectedClass = newClass
-            }
-        }
+        // Эта функция теперь управляется в ClassListView.swift
     }
 
     // Функция для удаления класса
     func deleteClass(at offsets: IndexSet) {
-        classList.remove(atOffsets: offsets)
-        saveClassListToFile() // Сохраняем список классов
+        // Эта функция теперь управляется в ClassListView.swift
     }
 
-    
+
     func loadClassListFromFile() {
         do {
             if let projectURL = self.projectURL {
@@ -597,7 +433,7 @@ struct ContentView: View {
         guard let projectURL = projectURL else { return }
         let settingsURL = projectURL.appendingPathComponent("settings").appendingPathComponent("projectSettings.json")
 
-        let projectSettings = ProjectSettings(foldersInProject: foldersInProject, selectedFolder: selectedFolder)
+        let projectSettings = ProjectSettings(foldersInProject: foldersInProject, selectedFolder: selectedFolder, classList: classList)
         do {
             let encoder = JSONEncoder()
             let data = try encoder.encode(projectSettings)
@@ -617,14 +453,12 @@ struct ContentView: View {
             let projectSettings = try decoder.decode(ProjectSettings.self, from: data)
             self.foldersInProject = projectSettings.foldersInProject
             self.selectedFolder = projectSettings.selectedFolder
+            self.classList = projectSettings.classList
         } catch {
             print("Ошибка при загрузке настроек проекта: \(error.localizedDescription)")
         }
     }
-    
-    
 }
-
 
 extension NSImage {
     func resizeMaintainingAspectRatio(to size: NSSize) -> NSImage {
@@ -649,6 +483,8 @@ extension NSImage {
     }
 }
 
-#Preview {
-    ContentView()
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
 }

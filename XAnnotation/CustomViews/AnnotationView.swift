@@ -128,20 +128,13 @@ struct AnnotationView: View {
                         )
                         Rectangle()
                             .stroke(annotation.mlClass.color.toColor(), lineWidth: 2)
-//                            .stroke(Color.green, lineWidth: 2)
                             .frame(width: annotationRect.width, height: annotationRect.height)
                             .position(
                                 x: annotationRect.midX + imageOrigin.x,
                                 y: annotationRect.midY + imageOrigin.y
                             )
                     }
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+
                     
                 } else {
                     Text("Не удалось загрузить изображение")

@@ -18,6 +18,8 @@
 		E2105F8A2C9992BA0032250E /* MouseTrackingNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2105F892C9992BA0032250E /* MouseTrackingNSView.swift */; };
 		E2105F8D2C99B8710032250E /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2105F8C2C99B8710032250E /* NSImage.swift */; };
 		E2105F8F2C99BB410032250E /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2105F8E2C99BB410032250E /* URL.swift */; };
+		E2868E852C9C2FF60020BAA2 /* ClassListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2868E842C9C2FEA0020BAA2 /* ClassListView.swift */; };
+		E2868E872C9C34870020BAA2 /* ClassRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2868E862C9C34870020BAA2 /* ClassRowView.swift */; };
 		E2DEAB772C99CB6B00ABC62C /* ProjectSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DEAB762C99CB6B00ABC62C /* ProjectSettings.swift */; };
 		E2DEAB792C99E48500ABC62C /* MLClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DEAB782C99E48500ABC62C /* MLClass.swift */; };
 /* End PBXBuildFile section */
@@ -36,6 +38,8 @@
 		E2105F892C9992BA0032250E /* MouseTrackingNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseTrackingNSView.swift; sourceTree = "<group>"; };
 		E2105F8C2C99B8710032250E /* NSImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSImage.swift; sourceTree = "<group>"; };
 		E2105F8E2C99BB410032250E /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
+		E2868E842C9C2FEA0020BAA2 /* ClassListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassListView.swift; sourceTree = "<group>"; };
+		E2868E862C9C34870020BAA2 /* ClassRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassRowView.swift; sourceTree = "<group>"; };
 		E2DEAB762C99CB6B00ABC62C /* ProjectSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectSettings.swift; sourceTree = "<group>"; };
 		E2DEAB782C99E48500ABC62C /* MLClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLClass.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -93,6 +97,8 @@
 		E2105F7F2C9968060032250E /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
+				E2868E862C9C34870020BAA2 /* ClassRowView.swift */,
+				E2868E842C9C2FEA0020BAA2 /* ClassListView.swift */,
 				E2105F802C99684C0032250E /* AsyncImageView.swift */,
 				E2105F822C9970EE0032250E /* AnnotationView.swift */,
 				E2105F872C998FB70032250E /* MouseTrackingView.swift */,
@@ -148,7 +154,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					E2105F6C2C9967A70032250E = {
 						CreatedOnToolsVersion = 15.4;
@@ -192,7 +198,9 @@
 			files = (
 				E2DEAB772C99CB6B00ABC62C /* ProjectSettings.swift in Sources */,
 				E2105F732C9967A70032250E /* ContentView.swift in Sources */,
+				E2868E872C9C34870020BAA2 /* ClassRowView.swift in Sources */,
 				E2105F862C99713A0032250E /* Annotation.swift in Sources */,
+				E2868E852C9C2FF60020BAA2 /* ClassListView.swift in Sources */,
 				E2105F8F2C99BB410032250E /* URL.swift in Sources */,
 				E2105F832C9970EE0032250E /* AnnotationView.swift in Sources */,
 				E2105F712C9967A70032250E /* XAnnotationApp.swift in Sources */,
@@ -241,6 +249,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -304,6 +313,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -335,6 +345,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"XAnnotation/Preview Content\"";
 				DEVELOPMENT_TEAM = 38Y6LA5LS9;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -363,6 +374,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"XAnnotation/Preview Content\"";
 				DEVELOPMENT_TEAM = 38Y6LA5LS9;
 				ENABLE_HARDENED_RUNTIME = YES;
