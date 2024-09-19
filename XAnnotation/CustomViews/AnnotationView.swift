@@ -71,7 +71,7 @@ struct AnnotationView: View {
                                 }
                                 .onEnded { _ in
                                     isDrawing = false
-                                    addAnnotation(imageScale: imageScale)
+                                    addAnnotation(imageScale: imageScale, imageSize: imageSize)
                                     currentRect = .zero
                                 }
                         )
@@ -119,20 +119,39 @@ struct AnnotationView: View {
                     }
 
                     // Drawing saved annotations
-                    ForEach(currentImageAnnotations, id: \.self) { annotation in
-                        let annotationRect = CGRect(
-                            x: annotation.coordinates.x / imageScale,
-                            y: annotation.coordinates.y / imageScale,
-                            width: annotation.coordinates.width / imageScale,
-                            height: annotation.coordinates.height / imageScale
-                        )
-                        Rectangle()
-                            .stroke(annotation.mlClass.color.toColor(), lineWidth: 2)
-                            .frame(width: annotationRect.width, height: annotationRect.height)
-                            .position(
-                                x: annotationRect.midX + imageOrigin.x,
-                                y: annotationRect.midY + imageOrigin.y
+                    ForEach(currentImageAnnotations) { annotation in
+                        if let classData = classList.first(where: { $0.name == annotation.label }) {
+                            let annotationRect = CGRect(
+                                x: annotation.coordinates.x / Double(imageScale),
+                                y: annotation.coordinates.y / Double(imageScale),
+                                width: annotation.coordinates.width / Double(imageScale),
+                                height: annotation.coordinates.height / Double(imageScale)
                             )
+
+                            Rectangle()
+                                .stroke(classData.color.toColor(), lineWidth: 2)
+                                .frame(width: annotationRect.width, height: annotationRect.height)
+                                .position(
+                                    x: annotationRect.midX + imageOrigin.x,
+                                    y: annotationRect.midY + imageOrigin.y
+                                )
+                        } else {
+                            // Если класс не найден, используем стандартный цвет
+                            let annotationRect = CGRect(
+                                x: annotation.coordinates.x / Double(imageScale),
+                                y: annotation.coordinates.y / Double(imageScale),
+                                width: annotation.coordinates.width / Double(imageScale),
+                                height: annotation.coordinates.height / Double(imageScale)
+                            )
+
+                            Rectangle()
+                                .stroke(Color.blue, lineWidth: 2)
+                                .frame(width: annotationRect.width, height: annotationRect.height)
+                                .position(
+                                    x: annotationRect.midX + imageOrigin.x,
+                                    y: annotationRect.midY + imageOrigin.y
+                                )
+                        }
                     }
 
                     
@@ -146,38 +165,75 @@ struct AnnotationView: View {
         }
     }
 
+    /// Фильтрует аннотации для текущего изображения
     var currentImageAnnotations: [Annotation] {
-        if let annotationData = annotations.first(where: { $0.image == imageURL.lastPathComponent }) {
-            return annotationData.annotations
-        }
-        return []
+        annotations.filter { $0.image == imageURL.lastPathComponent }.flatMap { $0.annotations }
     }
 
-    func addAnnotation(imageScale: CGFloat) {
+//    /// Добавляет новую аннотацию
+//    func addAnnotation(imageScale: CGFloat) {
+//        guard let selectedClass = selectedClass else {
+//            // Если класс не выбран, не сохраняем аннотацию
+//            print("Класс не выбран. Пожалуйста, выберите класс перед аннотированием.")
+//            return
+//        }
+//
+//        let normalizedX = currentRect.origin.x * imageScale
+//        let normalizedY = currentRect.origin.y * imageScale
+//        let normalizedWidth = currentRect.size.width * imageScale
+//        let normalizedHeight = currentRect.size.height * imageScale
+//
+//        let newAnnotation = AnnotationData(
+//            imageURL: imageURL,
+//            className: selectedClass.name,
+//            boundingBox: CGRect(x: normalizedX, y: normalizedY, width: normalizedWidth, height: normalizedHeight)
+//        )
+//
+//        annotations.append(newAnnotation)
+//
+//        // Сохраняем аннотации
+//        saveAnnotations()
+//    }
+    
+    
+    /// Добавляет новую аннотацию
+    func addAnnotation(imageScale: CGFloat, imageSize: CGSize) {
         guard let selectedClass = selectedClass else {
             // Если класс не выбран, не сохраняем аннотацию
             print("Класс не выбран. Пожалуйста, выберите класс перед аннотированием.")
             return
         }
 
+        // Инверсия Y координаты убрана, так как система координат совпадает
         let normalizedX = currentRect.origin.x * imageScale
         let normalizedY = currentRect.origin.y * imageScale
         let normalizedWidth = currentRect.size.width * imageScale
         let normalizedHeight = currentRect.size.height * imageScale
 
+        // Проверка и корректировка координат, чтобы они не выходили за границы изображения
+        let clampedX = max(0, normalizedX)
+        let clampedY = max(0, normalizedY)
+        let clampedWidth = min(normalizedWidth, Double(imageSize.width) * Double(imageScale) - clampedX)
+        let clampedHeight = min(normalizedHeight, Double(imageSize.height) * Double(imageScale) - clampedY)
+
+        print("Normalized Coordinates (after clamping):")
+        print("X: \(clampedX), Y: \(clampedY), Width: \(clampedWidth), Height: \(clampedHeight)")
+
         let newAnnotation = Annotation(
-            mlClass: selectedClass,
+            label: selectedClass.name,
             coordinates: Coordinates(
-                x: normalizedX,
-                y: normalizedY,
-                width: normalizedWidth,
-                height: normalizedHeight
+                x: Double(clampedX),
+                y: Double(clampedY),
+                width: Double(clampedWidth),
+                height: Double(clampedHeight)
             )
         )
 
+        // Найти существующую запись для изображения и добавить аннотацию
         if let index = annotations.firstIndex(where: { $0.image == imageURL.lastPathComponent }) {
             annotations[index].annotations.append(newAnnotation)
         } else {
+            // Если запись не существует, добавить новую
             let annotationData = AnnotationData(
                 image: imageURL.lastPathComponent,
                 annotations: [newAnnotation]
