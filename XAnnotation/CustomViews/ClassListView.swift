@@ -41,6 +41,13 @@ struct ClassListView: View {
                     Text("Добавить")
                 }
                 .disabled(newClassName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                Button("Add 2 classes") {
+                    newClassName = "Red"
+                    addClass()
+                    newClassName = "Blue"
+                    addClass()
+                    newClassName = ""
+                }
             }
             .padding()
             

@@ -125,6 +125,7 @@ struct ContentView: View {
                                 annotations: $annotations,
                                 classList: $classList,
                                 selectedClass: $selectedClass,
+                                projectURL: $projectURL,
                                 saveAnnotations: saveAnnotationsToFile
                             )
                         } else {
@@ -157,131 +158,166 @@ struct ContentView: View {
         .frame(minWidth: 800, minHeight: 600)
     }
     
-    func generateCreateMLJSON() -> [CreateMLAnnotation] {
-        // Группируем аннотации по имени изображения
-        let groupedAnnotations = Dictionary(grouping: annotations) { $0.image }
-        
-        var createMLAnnotations: [CreateMLAnnotation] = []
-        
-        for (imageName, imageAnnotations) in groupedAnnotations {
-            // Получаем путь к изображению
-            guard let projectURL = self.projectURL,
-                  let selectedFolder = self.selectedFolder else {
-                print("Проект или выбранная папка не установлены.")
-                continue
-            }
-            
-            let imagePath = projectURL
-                .appendingPathComponent("images")
-                .appendingPathComponent(selectedFolder)
-                .appendingPathComponent(imageName)
-            
-            guard let nsImage = NSImage(contentsOf: imagePath) else {
-                print("Не удалось загрузить изображение по пути: \(imagePath.path)")
-                continue
-            }
-            
-            let imageWidth = nsImage.size.width
-            let imageHeight = nsImage.size.height
-            
-            print("Processing image: \(imageName) with size: \(imageWidth)x\(imageHeight)")
-            
-            var regions: [CreateMLRegion] = []
-            
-            for annotationData in imageAnnotations {
-                for annotation in annotationData.annotations {
-                    // Вычисляем центр прямоугольника
-                    let centerX = annotation.coordinates.x + (annotation.coordinates.width / 2.0)
-                    let centerY = annotation.coordinates.y + (annotation.coordinates.height / 2.0)
-                    
-                    // Проверяем, что координаты не выходят за пределы изображения
-                    let clampedX = max(0, min(centerX, imageWidth))
-                    let clampedY = max(0, min(centerY, imageHeight))
-                    let clampedWidth = max(0, min(annotation.coordinates.width, imageWidth))
-                    let clampedHeight = max(0, min(annotation.coordinates.height, imageHeight))
-                    
-                    // Логирование координат для отладки
-                    print("Original Coordinates for annotation '\(annotation.label)': x=\(annotation.coordinates.x), y=\(annotation.coordinates.y), width=\(annotation.coordinates.width), height=\(annotation.coordinates.height)")
-                    print("Calculated Center Coordinates: x=\(centerX), y=\(centerY)")
-                    print("Clamped Center Coordinates: x=\(clampedX), y=\(clampedY), width=\(clampedWidth), height=\(clampedHeight)")
-                    
-                    // Создаём регион для CreateML
-                    let region = CreateMLRegion(
-                        label: annotation.label,
-                        coordinates: CreateMLCoordinates(
-                            x: clampedX,
-                            y: clampedY,
-                            width: clampedWidth,
-                            height: clampedHeight
-                        )
-                    )
-                    regions.append(region)
-                }
-            }
-            
-            // Создаём аннотацию для изображения
-            let createMLAnnotation = CreateMLAnnotation(image: imageName, annotations: regions)
-            createMLAnnotations.append(createMLAnnotation)
-        }
-        
-        return createMLAnnotations
-    }
-    
- 
     func exportToCreateML() {
         guard let projectURL = projectURL else {
             print("Проект не выбран.")
             return
         }
         
-        // Открываем диалоговое окно для выбора папки экспорта
-        let openPanel = NSOpenPanel()
-        openPanel.title = "Выберите папку для экспорта CreateML"
-        openPanel.canChooseDirectories = true
-        openPanel.canChooseFiles = false
-        openPanel.allowsMultipleSelection = false
-        openPanel.canCreateDirectories = true
-
-        openPanel.begin { response in
-            if response == .OK, let exportFolderURL = openPanel.url {
-                // Создаём папку для изображений в папке экспорта
-                let exportImagesURL = exportFolderURL.appendingPathComponent("images")
-                do {
-                    try FileManager.default.createDirectory(at: exportImagesURL, withIntermediateDirectories: true, attributes: nil)
-                } catch {
-                    print("Ошибка при создании папки для экспорта: \(error.localizedDescription)")
-                    return
+        let fileManager = FileManager.default
+        
+        // Определяем путь к папке Training data
+        let trainingDataURL = projectURL.appendingPathComponent("Training data")
+        
+        // Если папка Training data существует, очищаем её
+        if fileManager.fileExists(atPath: trainingDataURL.path) {
+            do {
+                let contents = try fileManager.contentsOfDirectory(at: trainingDataURL, includingPropertiesForKeys: nil, options: [])
+                for file in contents {
+                    try fileManager.removeItem(at: file)
                 }
-                
-                // Копируем все изображения из проекта в папку экспорта
-                for folder in foldersInProject {
-                    let sourceFolderURL = projectURL.appendingPathComponent("images").appendingPathComponent(folder)
-                    let destinationFolderURL = exportImagesURL.appendingPathComponent(folder)
-                    do {
-                        try FileManager.default.copyItem(at: sourceFolderURL, to: destinationFolderURL)
-                    } catch {
-                        print("Ошибка при копировании папки \(folder): \(error.localizedDescription)")
-                    }
-                }
-                
-                // Генерируем JSON-файл в формате CreateML
-                let createMLJSON = generateCreateMLJSON()
-                let jsonURL = exportFolderURL.appendingPathComponent("createml.json")
-                do {
-                    let encoder = JSONEncoder()
-                    encoder.outputFormatting = .prettyPrinted
-                    let data = try encoder.encode(createMLJSON)
-                    try data.write(to: jsonURL)
-                    print("CreateML JSON успешно сохранён по адресу: \(jsonURL.path)")
-                } catch {
-                    print("Ошибка при сохранении CreateML JSON: \(error.localizedDescription)")
-                }
-            } else {
-                print("Экспорт отменён пользователем.")
+                print("Папка 'Training data' очищена.")
+            } catch {
+                print("Ошибка при очистке папки 'Training data': \(error.localizedDescription)")
+                return
+            }
+        } else {
+            // Если папки не существует, создаём её
+            do {
+                try fileManager.createDirectory(at: trainingDataURL, withIntermediateDirectories: true, attributes: nil)
+                print("Папка 'Training data' создана.")
+            } catch {
+                print("Ошибка при создании папки 'Training data': \(error.localizedDescription)")
+                return
             }
         }
+        
+        // Создаём папки train, test и valid внутри Training data
+        let trainURL = trainingDataURL.appendingPathComponent("train")
+        let testURL = trainingDataURL.appendingPathComponent("test")
+        let validURL = trainingDataURL.appendingPathComponent("valid")
+        
+        do {
+            try fileManager.createDirectory(at: trainURL, withIntermediateDirectories: true, attributes: nil)
+            try fileManager.createDirectory(at: testURL, withIntermediateDirectories: true, attributes: nil)
+            try fileManager.createDirectory(at: validURL, withIntermediateDirectories: true, attributes: nil)
+            print("Папки 'train', 'test' и 'valid' созданы.")
+        } catch {
+            print("Ошибка при создании папок 'train', 'test' и 'valid': \(error.localizedDescription)")
+            return
+        }
+        
+        // Собираем все аннотированные изображения из всех папок проекта
+        let allAnnotatedImages = annotations
+        
+        let totalImages = allAnnotatedImages.count
+        guard totalImages > 0 else {
+            print("Нет аннотированных изображений для экспорта.")
+            return
+        }
+        
+        // Перемешиваем массив для случайного распределения
+        let shuffledImages = allAnnotatedImages.shuffled()
+        
+        // Вычисляем количество изображений для каждой папки
+        var trainCount = Int(Double(totalImages) * 0.7)
+        var testCount = Int(Double(totalImages) * 0.15)
+        var validCount = Int(Double(totalImages) * 0.15)
+        
+        // Корректировка, чтобы общее количество соответствовало
+        let remainder = totalImages - (trainCount + testCount + validCount)
+        if remainder > 0 {
+            trainCount += remainder
+        }
+        
+        // Гарантируем, что в каждой папке будет хотя бы по одному изображению
+        if trainCount == 0 && totalImages >= 1 {
+            trainCount = 1
+        }
+        if testCount == 0 && totalImages >= 2 {
+            testCount = 1
+        }
+        if validCount == 0 && totalImages >= 3 {
+            validCount = 1
+        }
+        
+        // Разделяем изображения по папкам
+        let trainImages = shuffledImages.prefix(trainCount)
+        let testImages = shuffledImages.dropFirst(trainCount).prefix(testCount)
+        let validImages = shuffledImages.dropFirst(trainCount + testCount).prefix(validCount)
+        
+        // Функция для копирования и переименования изображений, а также формирования аннотаций
+        func processImages(_ images: ArraySlice<AnnotationData>, to folderURL: URL) {
+            var jsonAnnotations: [CreateMLAnnotation] = []
+            
+            for annotationData in images {
+                // Получаем UUID и исходное расширение файла
+                let uuid = annotationData.id.uuidString
+                let originalImagePath = annotationData.imagePath
+                let originalExtension = (originalImagePath as NSString).pathExtension
+                let newImageName = "\(uuid).\(originalExtension)"
+                
+                // Определяем пути исходного и целевого изображений
+                let sourceImageURL = projectURL.appendingPathComponent(originalImagePath)
+                let destinationImageURL = folderURL.appendingPathComponent(newImageName)
+                
+                // Копируем изображение
+                do {
+                    try fileManager.copyItem(at: sourceImageURL, to: destinationImageURL)
+                  //  print("Изображение \(originalImagePath) скопировано как \(newImageName) в папку \(folderURL.lastPathComponent).")
+                } catch {
+                    print("Ошибка при копировании изображения \(originalImagePath): \(error.localizedDescription)")
+                    continue
+                }
+                
+                // Формируем аннотации для CreateML
+                var regions: [CreateMLRegion] = []
+                for annotation in annotationData.annotations {
+                    let centerX = annotation.coordinates.x + (annotation.coordinates.width / 2.0)
+                    let centerY = annotation.coordinates.y + (annotation.coordinates.height / 2.0)
+                    
+                    // Создаём структуру аннотации
+                    let region = CreateMLRegion(
+                        label: annotation.label,
+                        coordinates: CreateMLCoordinates(
+                            x: centerX.rounded(),
+                            y: centerY.rounded(),
+                            width: annotation.coordinates.width.rounded(),
+                            height: annotation.coordinates.height.rounded()
+                        )
+                    )
+                    regions.append(region)
+                }
+                
+                // Создаём структуру для JSON
+                let createMLAnnotation = CreateMLAnnotation(
+                    image: newImageName,
+                    annotations: regions
+                )
+                jsonAnnotations.append(createMLAnnotation)
+            }
+            
+            // Создаём createml.json для текущей папки
+            let jsonURL = folderURL.appendingPathComponent("createml.json")
+            do {
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = .prettyPrinted
+                let data = try encoder.encode(jsonAnnotations)
+                try data.write(to: jsonURL)
+                print("Файл createml.json создан в папке \(folderURL.lastPathComponent).")
+            } catch {
+                print("Ошибка при создании createml.json в папке \(folderURL.lastPathComponent): \(error.localizedDescription)")
+            }
+        }
+        
+        // Обрабатываем каждую из папок train, test, valid
+        processImages(trainImages, to: trainURL)
+        processImages(testImages, to: testURL)
+        processImages(validImages, to: validURL)
+        
+        print("Экспорт в CreateML завершён.")
     }
-
+    
     // MARK: - Функции для управления проектом и аннотациями
 
     func createNewProject() {
@@ -621,28 +657,7 @@ struct ContentView: View {
     }
 }
 
-extension NSImage {
-    func resizeMaintainingAspectRatio(to size: NSSize) -> NSImage {
-        let newImage = NSImage(size: size)
-        newImage.lockFocus()
-        let rect = NSRect(origin: .zero, size: size)
-        self.draw(in: rect, from: NSRect(origin: .zero, size: self.size), operation: .copy, fraction: 1.0)
-        newImage.unlockFocus()
-        return newImage
-    }
 
-    func savePNG(to url: URL) {
-        guard let tiffData = self.tiffRepresentation else { return }
-        guard let bitmap = NSBitmapImageRep(data: tiffData) else { return }
-        guard let data = bitmap.representation(using: .png, properties: [:]) else { return }
-
-        do {
-            try data.write(to: url)
-        } catch {
-            print("Ошибка при сохранении изображения: \(error.localizedDescription)")
-        }
-    }
-}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

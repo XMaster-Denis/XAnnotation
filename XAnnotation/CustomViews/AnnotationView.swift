@@ -13,6 +13,7 @@ struct AnnotationView: View {
     @Binding var annotations: [AnnotationData]
     @Binding var classList: [ClassData]
     @Binding var selectedClass: ClassData?
+    @Binding var projectURL: URL?
     var saveAnnotations: () -> Void
 
     @State private var currentRect: CGRect = .zero
@@ -129,7 +130,7 @@ struct AnnotationView: View {
                             )
 
                             Rectangle()
-                                .stroke(classData.color.toColor(), lineWidth: 2)
+                                .stroke(classData.color.toColor(), lineWidth: 3)
                                 .frame(width: annotationRect.width, height: annotationRect.height)
                                 .position(
                                     x: annotationRect.midX + imageOrigin.x,
@@ -145,7 +146,7 @@ struct AnnotationView: View {
                             )
 
                             Rectangle()
-                                .stroke(Color.blue, lineWidth: 2)
+                                .stroke(Color.blue, lineWidth: 3)
                                 .frame(width: annotationRect.width, height: annotationRect.height)
                                 .position(
                                     x: annotationRect.midX + imageOrigin.x,
@@ -167,8 +168,34 @@ struct AnnotationView: View {
 
     /// Фильтрует аннотации для текущего изображения
     var currentImageAnnotations: [Annotation] {
-        annotations.filter { $0.image == imageURL.lastPathComponent }.flatMap { $0.annotations }
+        // Получаем относительный путь к изображению
+        guard let projectURL = self.projectURL else {
+            print("Проект не установлен.")
+            return []
+        }
+        
+        let absoluteImagePath = imageURL.path
+        let projectPath = projectURL.path
+        
+        // Проверяем, что изображение находится внутри корневой папки проекта
+        guard absoluteImagePath.hasPrefix(projectPath) else {
+            print("Изображение не находится в корневой папке проекта.")
+            return []
+        }
+        
+        // Вычисляем относительный путь
+        let relativePath = String(absoluteImagePath.dropFirst(projectPath.count + 1)) // +1 для удаления "/"
+        
+        // Ищем аннотации для текущего изображения
+        if let annotationData = annotations.first(where: { $0.imagePath == relativePath }) {
+            return annotationData.annotations
+        }
+        
+        // Если аннотаций нет, возвращаем пустой массив
+        return []
     }
+
+
 
 //    /// Добавляет новую аннотацию
 //    func addAnnotation(imageScale: CGFloat) {
@@ -228,18 +255,50 @@ struct AnnotationView: View {
                 height: Double(clampedHeight)
             )
         )
+        
+        
 
-        // Найти существующую запись для изображения и добавить аннотацию
-        if let index = annotations.firstIndex(where: { $0.image == imageURL.lastPathComponent }) {
-            annotations[index].annotations.append(newAnnotation)
-        } else {
-            // Если запись не существует, добавить новую
-            let annotationData = AnnotationData(
-                image: imageURL.lastPathComponent,
-                annotations: [newAnnotation]
-            )
-            annotations.append(annotationData)
-        }
+            guard let projectURL = self.projectURL else {
+                print("Проект не установлен.")
+                return
+            }
+            // Предполагается, что imageURL является URL изображения, которое аннотируется
+            let absoluteImagePath = imageURL.path
+            let projectPath = projectURL.path
+
+            // Проверяем, что изображение находится внутри корневой папки проекта
+            guard absoluteImagePath.hasPrefix(projectPath) else {
+                print("Изображение не находится в корневой папке проекта.")
+                return
+            }
+
+            // Получаем относительный путь
+            let relativePath = String(absoluteImagePath.dropFirst(projectPath.count + 1)) // +1 для удаления "/"
+        print("relativePath \(relativePath)")
+            // Найти существующую запись для изображения и добавить аннотацию
+            if let index = annotations.firstIndex(where: { $0.imagePath == relativePath }) {
+                print("annotations.first \(annotations.first!.imagePath)")
+                annotations[index].annotations.append(newAnnotation)
+            } else {
+                // Если запись не существует, добавить новую с уникальным UUID
+                let annotationData = AnnotationData(
+                    imagePath: relativePath,
+                    annotations: [newAnnotation]
+                )
+                annotations.append(annotationData)
+            }
+
+//        // Найти существующую запись для изображения и добавить аннотацию
+//        if let index = annotations.firstIndex(where: { $0.imagePath == imageURL.lastPathComponent }) {
+//            annotations[index].annotations.append(newAnnotation)
+//        } else {
+//            // Если запись не существует, добавить новую
+//            let annotationData = AnnotationData(
+//                imagePath: imageURL.lastPathComponent,
+//                annotations: [newAnnotation]
+//            )
+//            annotations.append(annotationData)
+//        }
 
         // Сохраняем аннотации
         saveAnnotations()

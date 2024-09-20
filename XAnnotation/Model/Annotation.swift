@@ -7,30 +7,9 @@
 
 import Foundation
 
-//struct AnnotationData: Codable, Identifiable {
-//    var id: UUID = UUID()
-//    var imageURL: URL
-//    var className: String
-//    var boundingBox: CGRect
-//
-//}
-//
-//struct Annotation: Codable, Hashable {
-//    var mlClass: ClassData
-//    var coordinates: Coordinates
-//}
-//
-//struct Coordinates: Codable, Hashable {
-//    var x: CGFloat
-//    var y: CGFloat
-//    var width: CGFloat
-//    var height: CGFloat
-//}
-
-
 struct AnnotationData: Codable, Identifiable {
     var id: UUID = UUID()
-    var image: String // Имя изображения, например "0001.jpg"
+    let imagePath: String // Путь к изображению относительно корня проекта
     var annotations: [Annotation]
 }
 
