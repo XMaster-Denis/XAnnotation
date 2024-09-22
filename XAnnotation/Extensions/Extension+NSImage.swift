@@ -27,4 +27,9 @@ extension NSImage {
             print("Ошибка при сохранении изображения: \(error.localizedDescription)")
         }
     }
+    
+    var pixelSize: CGSize? {
+        guard let bitmapRep = representations.first as? NSBitmapImageRep else { return nil }
+        return CGSize(width: bitmapRep.pixelsWide, height: bitmapRep.pixelsHigh)
+    }
 }

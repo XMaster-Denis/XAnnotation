@@ -14,6 +14,7 @@ struct ClassRowView: View {
     var saveClassListToFile: () -> Void
     var saveProjectSettings: () -> Void
     
+    
     @State private var editingClassID: UUID? = nil
     @State private var editedClassName: String = ""
     

@@ -19,6 +19,7 @@
 		E2868E872C9C34870020BAA2 /* ClassRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2868E862C9C34870020BAA2 /* ClassRowView.swift */; };
 		E2868E892C9C54120020BAA2 /* CreateMLAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2868E882C9C54120020BAA2 /* CreateMLAnnotation.swift */; };
 		E2868E8E2C9DDA960020BAA2 /* Extension+NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2868E8D2C9DDA960020BAA2 /* Extension+NSImage.swift */; };
+		E2868E922C9DF94E0020BAA2 /* ResizableHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2868E912C9DF94E0020BAA2 /* ResizableHandle.swift */; };
 		E2DEAB772C99CB6B00ABC62C /* ProjectSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DEAB762C99CB6B00ABC62C /* ProjectSettings.swift */; };
 		E2DEAB792C99E48500ABC62C /* ClassData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DEAB782C99E48500ABC62C /* ClassData.swift */; };
 /* End PBXBuildFile section */
@@ -38,6 +39,7 @@
 		E2868E862C9C34870020BAA2 /* ClassRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassRowView.swift; sourceTree = "<group>"; };
 		E2868E882C9C54120020BAA2 /* CreateMLAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMLAnnotation.swift; sourceTree = "<group>"; };
 		E2868E8D2C9DDA960020BAA2 /* Extension+NSImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+NSImage.swift"; sourceTree = "<group>"; };
+		E2868E912C9DF94E0020BAA2 /* ResizableHandle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizableHandle.swift; sourceTree = "<group>"; };
 		E2DEAB762C99CB6B00ABC62C /* ProjectSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectSettings.swift; sourceTree = "<group>"; };
 		E2DEAB782C99E48500ABC62C /* ClassData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -95,6 +97,7 @@
 		E2105F7F2C9968060032250E /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
+				E2868E912C9DF94E0020BAA2 /* ResizableHandle.swift */,
 				E2868E862C9C34870020BAA2 /* ClassRowView.swift */,
 				E2868E842C9C2FEA0020BAA2 /* ClassListView.swift */,
 				E2105F802C99684C0032250E /* AsyncImageView.swift */,
@@ -196,6 +199,7 @@
 				E2DEAB772C99CB6B00ABC62C /* ProjectSettings.swift in Sources */,
 				E2868E8E2C9DDA960020BAA2 /* Extension+NSImage.swift in Sources */,
 				E2868E892C9C54120020BAA2 /* CreateMLAnnotation.swift in Sources */,
+				E2868E922C9DF94E0020BAA2 /* ResizableHandle.swift in Sources */,
 				E2105F732C9967A70032250E /* ContentView.swift in Sources */,
 				E2868E872C9C34870020BAA2 /* ClassRowView.swift in Sources */,
 				E2105F862C99713A0032250E /* Annotation.swift in Sources */,
