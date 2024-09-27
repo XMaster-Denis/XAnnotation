@@ -8,63 +8,60 @@
 import SwiftUI
 
 struct ClassRowView: View {
-    let classData: ClassData
-    @Binding var selectedClass: ClassData?
-    @Binding var classList: [ClassData]
+    @Binding var currentClassData: ClassData
+
     var saveClassListToFile: () -> Void
-    var saveProjectSettings: () -> Void
-    
-    
-    @State private var editingClassID: UUID? = nil
-    @State private var editedClassName: String = ""
+
+    @State  var editingClassID: UUID? = nil
+    @State  var editedClassName: String = ""
+    @State  var selectedColor: Color = .white
     
     // Для отображения Alert
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
     
+    @EnvironmentObject var projectData: ProjectDataViewModel
+    @EnvironmentObject var classData: ClassDataViewModel
+    @EnvironmentObject var annotationsData: AnnotationViewModel
+    
+    var isPopoverPresented: Binding<Bool> {
+        Binding<Bool>(
+            get: { editingClassID == currentClassData.id },
+            set: { newValue in
+                if !newValue {
+                    editingClassID = nil
+                }
+            }
+        )
+    }
+    
     var body: some View {
+        
         HStack {
-            Text(classData.name)
-                .foregroundColor(selectedClass?.id == classData.id ? Color.red : Color.primary)
-                .bold(selectedClass?.id == classData.id)
+            Text(currentClassData.name)
+                .foregroundColor(classData.selectedClass?.id == currentClassData.id ? Color.red : Color.primary)
+                .bold(classData.selectedClass?.id == currentClassData.id)
             
             Spacer()
             
             // Цветной прямоугольник
             Rectangle()
-                .fill(classData.color.toColor())
+                .fill(currentClassData.color.toColor())
                 .frame(width: 30, height: 20)
                 .cornerRadius(3)
                 .onTapGesture {
-                    editingClassID = classData.id
-                    editedClassName = classData.name // Инициализируем редактируемое имя
+                    editingClassID = currentClassData.id
+                    editedClassName = currentClassData.name // Инициализируем редактируемое имя
                 }
-                .popover(isPresented: Binding<Bool>(
-                    get: { editingClassID == classData.id },
-                    set: { if !$0 { editingClassID = nil } }
-                )) {
+                .popover(isPresented: isPopoverPresented) {
                     VStack {
-                        ColorPicker("Выберите цвет", selection: Binding(
-                            get: { classData.color.toColor() },
-                            set: { newColor in
-                                if let index = classList.firstIndex(where: { $0.id == classData.id }) {
-                                    classList[index].color = ColorData.fromColor(newColor)
-                                    saveClassListToFile()
-                                    // Обновляем настройки проекта после изменения цвета
-                                    saveProjectSettings()
-                                }
-                            }
-                        ))
+                        ColorPicker("Выберите цвет", selection: $selectedColor)
                         
                         // Поле для редактирования имени класса
                         TextField("Новое имя класса", text: $editedClassName)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding(.top)
-                            .onAppear {
-                                if editingClassID == classData.id {
-                                    editedClassName = classData.name
-                                }
-                            }
+
                         
                         Button("Сохранить изменения") {
                             saveChanges()
@@ -80,22 +77,26 @@ struct ClassRowView: View {
                     }
                     .padding()
                     .frame(width: 300, height: 300)
+                    
+                    .onAppear {
+                        if editingClassID == currentClassData.id {
+                           // editedClassName = classData.name
+                            selectedColor = currentClassData.color.toColor()
+                        }
+                    }
                 }
-        }
-        .contentShape(Rectangle()) // Делает всю строку tappable
-        .onTapGesture {
-            selectedClass = classData
         }
         .contextMenu {
             Button("Редактировать имя") {
-                editingClassID = classData.id
-                editedClassName = classData.name
+                editingClassID = currentClassData.id
+                editedClassName = currentClassData.name
             }
             Button("Удалить") {
                 deleteClass()
             }
         }
         .padding(.vertical, 5)
+        .contentShape(Rectangle())
         .alert(isPresented: $showAlert) {
             Alert(title: Text("Ошибка"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
@@ -106,6 +107,8 @@ struct ClassRowView: View {
     private func saveChanges() {
         let trimmedName = editedClassName.trimmingCharacters(in: .whitespacesAndNewlines)
         
+        //let oldClassName = classData.name
+        
         // 1. Проверка на пустое имя
         if trimmedName.isEmpty {
             alertMessage = "Имя класса не может быть пустым."
@@ -114,7 +117,7 @@ struct ClassRowView: View {
         }
         
         // 2. Проверка на уникальность имени
-        let nameExists = classList.contains { $0.name == trimmedName && $0.id != classData.id }
+        let nameExists = classData.classList.contains { $0.name == trimmedName && $0.id != currentClassData.id }
         if nameExists {
             alertMessage = "Имя класса уже существует."
             showAlert = true
@@ -122,35 +125,32 @@ struct ClassRowView: View {
         }
         
         // 3. Поиск индекса класса для редактирования
-        guard let index = classList.firstIndex(where: { $0.id == classData.id }) else {
+        guard let index = classData.classList.firstIndex(where: { $0.id == currentClassData.id }) else {
             alertMessage = "Класс не найден."
             showAlert = true
             return
         }
         
+        // Обновляем аннотации
+       // updateAnnotations(from: oldClassName, to: trimmedName)
+        
         // 4. Обновление имени класса
-        classList[index].name = trimmedName
+        classData.classList[index].name = trimmedName
+        currentClassData.color = ColorData.fromColor(selectedColor)
         saveClassListToFile()
+        
+        // Закрываем системную панель выбора цвета
+        NSColorPanel.shared.close()
         editedClassName = ""
         editingClassID = nil
     }
     
     private func deleteClass() {
-        if let index = classList.firstIndex(where: { $0.id == classData.id }) {
-            classList.remove(at: index)
+        if let index = classData.classList.firstIndex(where: { $0.id == currentClassData.id }) {
+            classData.classList.remove(at: index)
             saveClassListToFile()
         }
     }
 }
 
-struct ClassRowView_Previews: PreviewProvider {
-    static var previews: some View {
-        ClassRowView(
-            classData: ClassData(name: "Example", color: ColorData(red: 1, green: 0, blue: 0)),
-            selectedClass: .constant(nil),
-            classList: .constant([]),
-            saveClassListToFile: {},
-            saveProjectSettings: {}
-        )
-    }
-}
+

@@ -15,11 +15,19 @@
 		E2105F832C9970EE0032250E /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2105F822C9970EE0032250E /* AnnotationView.swift */; };
 		E2105F862C99713A0032250E /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2105F852C99713A0032250E /* Annotation.swift */; };
 		E2105F8F2C99BB410032250E /* Extension+URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2105F8E2C99BB410032250E /* Extension+URL.swift */; };
+		E27BC2142CA6D0D200154AB3 /* ClassDataViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27BC2132CA6D0D200154AB3 /* ClassDataViewModel.swift */; };
+		E27BC2162CA6E62400154AB3 /* ImageThumbnailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27BC2152CA6E62400154AB3 /* ImageThumbnailsViewModel.swift */; };
+		E27BC21A2CA7184F00154AB3 /* StaticImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27BC2192CA7184F00154AB3 /* StaticImageView.swift */; };
+		E27BC21C2CA7210200154AB3 /* KrestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27BC21B2CA7210200154AB3 /* KrestViewModel.swift */; };
+		E27BC21E2CA7219000154AB3 /* KrestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27BC21D2CA7219000154AB3 /* KrestView.swift */; };
 		E2868E852C9C2FF60020BAA2 /* ClassListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2868E842C9C2FEA0020BAA2 /* ClassListView.swift */; };
 		E2868E872C9C34870020BAA2 /* ClassRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2868E862C9C34870020BAA2 /* ClassRowView.swift */; };
 		E2868E892C9C54120020BAA2 /* CreateMLAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2868E882C9C54120020BAA2 /* CreateMLAnnotation.swift */; };
 		E2868E8E2C9DDA960020BAA2 /* Extension+NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2868E8D2C9DDA960020BAA2 /* Extension+NSImage.swift */; };
 		E2868E922C9DF94E0020BAA2 /* ResizableHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2868E912C9DF94E0020BAA2 /* ResizableHandle.swift */; };
+		E2868E952CA43FBF0020BAA2 /* AnnotationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2868E942CA43FAE0020BAA2 /* AnnotationViewModel.swift */; };
+		E2868E972CA441AF0020BAA2 /* ProjectDataViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2868E962CA441AF0020BAA2 /* ProjectDataViewModel.swift */; };
+		E2868E992CA487550020BAA2 /* ImageThumbnailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2868E982CA487550020BAA2 /* ImageThumbnailsView.swift */; };
 		E2DEAB772C99CB6B00ABC62C /* ProjectSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DEAB762C99CB6B00ABC62C /* ProjectSettings.swift */; };
 		E2DEAB792C99E48500ABC62C /* ClassData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DEAB782C99E48500ABC62C /* ClassData.swift */; };
 /* End PBXBuildFile section */
@@ -35,11 +43,19 @@
 		E2105F822C9970EE0032250E /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
 		E2105F852C99713A0032250E /* Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
 		E2105F8E2C99BB410032250E /* Extension+URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+URL.swift"; sourceTree = "<group>"; };
+		E27BC2132CA6D0D200154AB3 /* ClassDataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassDataViewModel.swift; sourceTree = "<group>"; };
+		E27BC2152CA6E62400154AB3 /* ImageThumbnailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageThumbnailsViewModel.swift; sourceTree = "<group>"; };
+		E27BC2192CA7184F00154AB3 /* StaticImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticImageView.swift; sourceTree = "<group>"; };
+		E27BC21B2CA7210200154AB3 /* KrestViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KrestViewModel.swift; sourceTree = "<group>"; };
+		E27BC21D2CA7219000154AB3 /* KrestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KrestView.swift; sourceTree = "<group>"; };
 		E2868E842C9C2FEA0020BAA2 /* ClassListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassListView.swift; sourceTree = "<group>"; };
 		E2868E862C9C34870020BAA2 /* ClassRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassRowView.swift; sourceTree = "<group>"; };
 		E2868E882C9C54120020BAA2 /* CreateMLAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMLAnnotation.swift; sourceTree = "<group>"; };
 		E2868E8D2C9DDA960020BAA2 /* Extension+NSImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+NSImage.swift"; sourceTree = "<group>"; };
 		E2868E912C9DF94E0020BAA2 /* ResizableHandle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizableHandle.swift; sourceTree = "<group>"; };
+		E2868E942CA43FAE0020BAA2 /* AnnotationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationViewModel.swift; sourceTree = "<group>"; };
+		E2868E962CA441AF0020BAA2 /* ProjectDataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDataViewModel.swift; sourceTree = "<group>"; };
+		E2868E982CA487550020BAA2 /* ImageThumbnailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageThumbnailsView.swift; sourceTree = "<group>"; };
 		E2DEAB762C99CB6B00ABC62C /* ProjectSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectSettings.swift; sourceTree = "<group>"; };
 		E2DEAB782C99E48500ABC62C /* ClassData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -74,6 +90,7 @@
 		E2105F6F2C9967A70032250E /* XAnnotation */ = {
 			isa = PBXGroup;
 			children = (
+				E2868E932CA43F280020BAA2 /* ViewModel */,
 				E2105F8B2C99B83F0032250E /* Extensions */,
 				E2105F7F2C9968060032250E /* CustomViews */,
 				E2105F702C9967A70032250E /* XAnnotationApp.swift */,
@@ -97,11 +114,14 @@
 		E2105F7F2C9968060032250E /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
+				E27BC2192CA7184F00154AB3 /* StaticImageView.swift */,
+				E2868E982CA487550020BAA2 /* ImageThumbnailsView.swift */,
 				E2868E912C9DF94E0020BAA2 /* ResizableHandle.swift */,
 				E2868E862C9C34870020BAA2 /* ClassRowView.swift */,
 				E2868E842C9C2FEA0020BAA2 /* ClassListView.swift */,
 				E2105F802C99684C0032250E /* AsyncImageView.swift */,
 				E2105F822C9970EE0032250E /* AnnotationView.swift */,
+				E27BC21D2CA7219000154AB3 /* KrestView.swift */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -124,6 +144,18 @@
 				E2105F8E2C99BB410032250E /* Extension+URL.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		E2868E932CA43F280020BAA2 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				E27BC2152CA6E62400154AB3 /* ImageThumbnailsViewModel.swift */,
+				E27BC2132CA6D0D200154AB3 /* ClassDataViewModel.swift */,
+				E2868E942CA43FAE0020BAA2 /* AnnotationViewModel.swift */,
+				E2868E962CA441AF0020BAA2 /* ProjectDataViewModel.swift */,
+				E27BC21B2CA7210200154AB3 /* KrestViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -199,14 +231,22 @@
 				E2DEAB772C99CB6B00ABC62C /* ProjectSettings.swift in Sources */,
 				E2868E8E2C9DDA960020BAA2 /* Extension+NSImage.swift in Sources */,
 				E2868E892C9C54120020BAA2 /* CreateMLAnnotation.swift in Sources */,
+				E27BC21E2CA7219000154AB3 /* KrestView.swift in Sources */,
+				E27BC21A2CA7184F00154AB3 /* StaticImageView.swift in Sources */,
 				E2868E922C9DF94E0020BAA2 /* ResizableHandle.swift in Sources */,
+				E2868E972CA441AF0020BAA2 /* ProjectDataViewModel.swift in Sources */,
+				E2868E992CA487550020BAA2 /* ImageThumbnailsView.swift in Sources */,
 				E2105F732C9967A70032250E /* ContentView.swift in Sources */,
 				E2868E872C9C34870020BAA2 /* ClassRowView.swift in Sources */,
 				E2105F862C99713A0032250E /* Annotation.swift in Sources */,
+				E2868E952CA43FBF0020BAA2 /* AnnotationViewModel.swift in Sources */,
 				E2868E852C9C2FF60020BAA2 /* ClassListView.swift in Sources */,
 				E2105F8F2C99BB410032250E /* Extension+URL.swift in Sources */,
 				E2105F832C9970EE0032250E /* AnnotationView.swift in Sources */,
+				E27BC2142CA6D0D200154AB3 /* ClassDataViewModel.swift in Sources */,
 				E2105F712C9967A70032250E /* XAnnotationApp.swift in Sources */,
+				E27BC21C2CA7210200154AB3 /* KrestViewModel.swift in Sources */,
+				E27BC2162CA6E62400154AB3 /* ImageThumbnailsViewModel.swift in Sources */,
 				E2105F812C99684C0032250E /* AsyncImageView.swift in Sources */,
 				E2DEAB792C99E48500ABC62C /* ClassData.swift in Sources */,
 			);
