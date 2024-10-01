@@ -18,8 +18,8 @@
 		E27BC2142CA6D0D200154AB3 /* ClassDataViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27BC2132CA6D0D200154AB3 /* ClassDataViewModel.swift */; };
 		E27BC2162CA6E62400154AB3 /* ImageThumbnailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27BC2152CA6E62400154AB3 /* ImageThumbnailsViewModel.swift */; };
 		E27BC21A2CA7184F00154AB3 /* StaticImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27BC2192CA7184F00154AB3 /* StaticImageView.swift */; };
-		E27BC21C2CA7210200154AB3 /* KrestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27BC21B2CA7210200154AB3 /* KrestViewModel.swift */; };
-		E27BC21E2CA7219000154AB3 /* KrestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27BC21D2CA7219000154AB3 /* KrestView.swift */; };
+		E27BC21C2CA7210200154AB3 /* СrossViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27BC21B2CA7210200154AB3 /* СrossViewModel.swift */; };
+		E27BC21E2CA7219000154AB3 /* СrossView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27BC21D2CA7219000154AB3 /* СrossView.swift */; };
 		E2868E852C9C2FF60020BAA2 /* ClassListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2868E842C9C2FEA0020BAA2 /* ClassListView.swift */; };
 		E2868E872C9C34870020BAA2 /* ClassRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2868E862C9C34870020BAA2 /* ClassRowView.swift */; };
 		E2868E892C9C54120020BAA2 /* CreateMLAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2868E882C9C54120020BAA2 /* CreateMLAnnotation.swift */; };
@@ -46,8 +46,8 @@
 		E27BC2132CA6D0D200154AB3 /* ClassDataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassDataViewModel.swift; sourceTree = "<group>"; };
 		E27BC2152CA6E62400154AB3 /* ImageThumbnailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageThumbnailsViewModel.swift; sourceTree = "<group>"; };
 		E27BC2192CA7184F00154AB3 /* StaticImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticImageView.swift; sourceTree = "<group>"; };
-		E27BC21B2CA7210200154AB3 /* KrestViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KrestViewModel.swift; sourceTree = "<group>"; };
-		E27BC21D2CA7219000154AB3 /* KrestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KrestView.swift; sourceTree = "<group>"; };
+		E27BC21B2CA7210200154AB3 /* СrossViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "СrossViewModel.swift"; sourceTree = "<group>"; };
+		E27BC21D2CA7219000154AB3 /* СrossView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "СrossView.swift"; sourceTree = "<group>"; };
 		E2868E842C9C2FEA0020BAA2 /* ClassListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassListView.swift; sourceTree = "<group>"; };
 		E2868E862C9C34870020BAA2 /* ClassRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassRowView.swift; sourceTree = "<group>"; };
 		E2868E882C9C54120020BAA2 /* CreateMLAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMLAnnotation.swift; sourceTree = "<group>"; };
@@ -121,7 +121,7 @@
 				E2868E842C9C2FEA0020BAA2 /* ClassListView.swift */,
 				E2105F802C99684C0032250E /* AsyncImageView.swift */,
 				E2105F822C9970EE0032250E /* AnnotationView.swift */,
-				E27BC21D2CA7219000154AB3 /* KrestView.swift */,
+				E27BC21D2CA7219000154AB3 /* СrossView.swift */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -153,7 +153,7 @@
 				E27BC2132CA6D0D200154AB3 /* ClassDataViewModel.swift */,
 				E2868E942CA43FAE0020BAA2 /* AnnotationViewModel.swift */,
 				E2868E962CA441AF0020BAA2 /* ProjectDataViewModel.swift */,
-				E27BC21B2CA7210200154AB3 /* KrestViewModel.swift */,
+				E27BC21B2CA7210200154AB3 /* СrossViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -231,7 +231,7 @@
 				E2DEAB772C99CB6B00ABC62C /* ProjectSettings.swift in Sources */,
 				E2868E8E2C9DDA960020BAA2 /* Extension+NSImage.swift in Sources */,
 				E2868E892C9C54120020BAA2 /* CreateMLAnnotation.swift in Sources */,
-				E27BC21E2CA7219000154AB3 /* KrestView.swift in Sources */,
+				E27BC21E2CA7219000154AB3 /* СrossView.swift in Sources */,
 				E27BC21A2CA7184F00154AB3 /* StaticImageView.swift in Sources */,
 				E2868E922C9DF94E0020BAA2 /* ResizableHandle.swift in Sources */,
 				E2868E972CA441AF0020BAA2 /* ProjectDataViewModel.swift in Sources */,
@@ -245,7 +245,7 @@
 				E2105F832C9970EE0032250E /* AnnotationView.swift in Sources */,
 				E27BC2142CA6D0D200154AB3 /* ClassDataViewModel.swift in Sources */,
 				E2105F712C9967A70032250E /* XAnnotationApp.swift in Sources */,
-				E27BC21C2CA7210200154AB3 /* KrestViewModel.swift in Sources */,
+				E27BC21C2CA7210200154AB3 /* СrossViewModel.swift in Sources */,
 				E27BC2162CA6E62400154AB3 /* ImageThumbnailsViewModel.swift in Sources */,
 				E2105F812C99684C0032250E /* AsyncImageView.swift in Sources */,
 				E2DEAB792C99E48500ABC62C /* ClassData.swift in Sources */,

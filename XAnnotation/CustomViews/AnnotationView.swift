@@ -12,7 +12,7 @@ struct AnnotationView: View {
     @EnvironmentObject var annotationsData: AnnotationViewModel
     @EnvironmentObject var projectData: ProjectDataViewModel
     @EnvironmentObject var classData: ClassDataViewModel
-    @EnvironmentObject var krestData: KrestViewModel
+    @EnvironmentObject var krestData: СrossViewModel
     
     
     var body: some View {
@@ -46,6 +46,8 @@ struct AnnotationView: View {
                     // Вычисляем масштаб изображения
                     //let imageScale = nsImage.size.width / imageSize.width
                     let imageScale = pixelSize.width / imageSize.width
+                    
+                    СrossView(imageOrigin: imageOrigin, imageSize: imageSize)
                     
                     //Image(nsImage: nsImage)
                     Rectangle()
@@ -206,6 +208,10 @@ struct AnnotationView: View {
                             // }
                         }
                     }
+                    
+                    
+                    
+                    
                 } else {
                     Text("Не удалось загрузить изображение")
                         .foregroundColor(.red)

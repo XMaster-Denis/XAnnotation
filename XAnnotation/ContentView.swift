@@ -13,6 +13,7 @@ struct ContentView: View {
     @State private var showSaveAlert: Bool = false
     @State private var saveAlertMessage: String = ""
     
+    
     //var projectSettings = projectData.shared
     @EnvironmentObject var annotationsData: AnnotationViewModel
     @EnvironmentObject var projectData: ProjectDataViewModel
@@ -114,14 +115,32 @@ struct ContentView: View {
                         ScrollView(.vertical) {
                             LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))]) {
                                 ForEach(imageThumbnailsData.thumbnailURLs, id: \.self) { url in
-                                    Button(action: {
-                                        projectData.selectedImageURL = imageThumbnailsData.getImageURL(forThumbnailURL: url)
-                                    }) {
-                                        AsyncImageView(url: url, size: CGSize(width: 120, height: 120))
-                                            .padding(2)
-                                            .border(projectData.selectedImageURL == imageThumbnailsData.getImageURL(forThumbnailURL: url) ? Color.blue : Color.clear, width: 2)
+                                    ZStack (alignment: .topTrailing) {
+                                        
+                                        Button(action: {
+                                            projectData.selectedImageURL = imageThumbnailsData.getImageURL(forThumbnailURL: url)
+                                        }) {
+                                            AsyncImageView(url: url, size: CGSize(width: 120, height: 120))
+                                                .padding(2)
+                                                .border(projectData.selectedImageURL == imageThumbnailsData.getImageURL(forThumbnailURL: url) ? Color.blue : Color.clear, width: 2)
+                                            
+                                        }
+                                        .buttonStyle(PlainButtonStyle())
+                                        let numberOfAnnotations: Int = annotationsData.numberOfAnnotations(for: url)
+                                        Text("\(numberOfAnnotations)")
+                                            .padding(.horizontal, 3)
+                                            .padding(.vertical, 1)
+                                            //.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 5)
+                                                    .fill(Color.green)
+                                            )
+                                            .foregroundColor(.red)
+                                            .font(.title)
+                                            .offset(x: -5, y: 5)
+                                            
+                                            
                                     }
-                                    .buttonStyle(PlainButtonStyle())
                                 }
                             }
                         }
@@ -135,7 +154,7 @@ struct ContentView: View {
                         if projectData.selectedImageURL != nil {
                             ZStack {
                                 StaticImageView()
-                                KrestView()
+                                
                                 AnnotationView()
                             }
                         } else {

@@ -15,13 +15,41 @@ class AnnotationViewModel: ObservableObject {
         self.projectData = projectData
     }
     
+    func numberOfAnnotations(for imagePath: URL) -> Int {
+
+        let pathComponents = imagePath.pathComponents
+        let fileName = imagePath.lastPathComponent
+        let folder = pathComponents.dropLast()
+        let lastTwoFolders = folder.suffix(1)
+        let resultComponents = lastTwoFolders + [fileName]
+        let result = "images/" + resultComponents.joined(separator: "/")
+
+        if let annotationData = annotations.first(where: { $0.imagePath == result }) {
+            return annotationData.annotations.count
+        } else {
+            return 0
+        }
+    }
+    
+    func getRelativePath(_ absoluteImagePath: String) -> String? {
+        print("1")
+        guard let projectURL = projectData.projectURL else {
+            return ""
+        }
+        let projectPath = projectURL.path
+        
+        guard absoluteImagePath.hasPrefix(projectPath) else {
+            print("Изображение не находится в корневой папке проекта.")
+            return ""
+        }
+        
+        return String(absoluteImagePath.dropFirst(projectPath.count + 1))
+    }
+    
+    
     /// Фильтрует аннотации для текущего изображения
     var currentImageAnnotations: [Annotation] {
         // Получаем относительный путь к изображению
-        guard let projectURL = projectData.projectURL else {
-            print("Проект не установлен.")
-            return []
-        }
         
         guard let imageURL = projectData.selectedImageURL else {
             print("imageURL не установлен.")
@@ -29,17 +57,8 @@ class AnnotationViewModel: ObservableObject {
         }
         
         let absoluteImagePath = imageURL.path
-        let projectPath = projectURL.path
-        
-        // Проверяем, что изображение находится внутри корневой папки проекта
-        guard absoluteImagePath.hasPrefix(projectPath) else {
-            print("Изображение не находится в корневой папке проекта.")
-            return []
-        }
-        
-        // Вычисляем относительный путь
-        let relativePath = String(absoluteImagePath.dropFirst(projectPath.count + 1)) // +1 для удаления "/"
-        
+
+        let relativePath =  getRelativePath(absoluteImagePath)
         // Ищем аннотации для текущего изображения
         if let annotationData = annotations.first(where: { $0.imagePath == relativePath }) {
             return annotationData.annotations

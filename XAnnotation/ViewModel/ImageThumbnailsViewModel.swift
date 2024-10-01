@@ -30,6 +30,8 @@ class ImageThumbnailsViewModel: ObservableObject {
         let folderURL = projectURL.appendingPathComponent("images").appendingPathComponent(selectedFolder)
         loadImages(from: folderURL)
     }
+    
+
 
     func loadImages(from url: URL) {
         DispatchQueue.global(qos: .userInitiated).async {

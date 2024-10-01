@@ -42,6 +42,7 @@ struct AsyncImageView: View {
                         loadImage()
                     }
             }
+            
         }
     }
 
