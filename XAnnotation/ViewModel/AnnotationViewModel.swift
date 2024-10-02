@@ -32,7 +32,6 @@ class AnnotationViewModel: ObservableObject {
     }
     
     func getRelativePath(_ absoluteImagePath: String) -> String? {
-        print("1")
         guard let projectURL = projectData.projectURL else {
             return ""
         }
@@ -267,5 +266,90 @@ class AnnotationViewModel: ObservableObject {
         } catch {
             print("Ошибка при загрузке аннотаций: \(error.localizedDescription)")
         }
+    }
+    
+    func deleteAnnotation(annotation: Annotation) {
+        guard let projectURL = projectData.projectURL else {
+            print("Проект не установлен.")
+            return
+        }
+        
+        guard let imageURL = projectData.selectedImageURL else {
+            print("imageURL не установлен.")
+            return
+        }
+        
+        let absoluteImagePath = imageURL.path
+        let projectPath = projectURL.path
+        
+        guard absoluteImagePath.hasPrefix(projectPath) else {
+            print("Изображение не находится в корневой папке проекта.")
+            return
+        }
+        
+        let relativePath = String(absoluteImagePath.dropFirst(projectPath.count + 1))
+        
+        // Найти индекс `AnnotationData` для текущего изображения
+        guard let annotationDataIndex = annotations.firstIndex(where: { $0.imagePath == relativePath }) else {
+            print("Аннотация для изображения не найдена.")
+            return
+        }
+        
+        // Найти индекс конкретной аннотации внутри `AnnotationData`
+        guard let annotationIndex = annotations[annotationDataIndex].annotations.firstIndex(where: { $0.id == annotation.id }) else {
+            print("Конкретная аннотация не найдена.")
+            return
+        }
+        
+        // Удалить аннотацию
+        annotations[annotationDataIndex].annotations.remove(at: annotationIndex)
+        
+        // Если для изображения больше нет аннотаций, удалить `AnnotationData`
+        if annotations[annotationDataIndex].annotations.isEmpty {
+            annotations.remove(at: annotationDataIndex)
+        }
+        
+        // Сохранить обновленные аннотации
+        saveAnnotationsToFile()
+    }
+    
+    func updateAnnotationClass(annotation: Annotation, newClassName: String) {
+        guard let projectURL = projectData.projectURL else {
+            print("Проект не установлен.")
+            return
+        }
+        
+        guard let imageURL = projectData.selectedImageURL else {
+            print("imageURL не установлен.")
+            return
+        }
+        
+        let absoluteImagePath = imageURL.path
+        let projectPath = projectURL.path
+        
+        guard absoluteImagePath.hasPrefix(projectPath) else {
+            print("Изображение не находится в корневой папке проекта.")
+            return
+        }
+        
+        let relativePath = String(absoluteImagePath.dropFirst(projectPath.count + 1))
+        
+        // Найти индекс `AnnotationData` для текущего изображения
+        guard let annotationDataIndex = annotations.firstIndex(where: { $0.imagePath == relativePath }) else {
+            print("Аннотация для изображения не найдена.")
+            return
+        }
+        
+        // Найти индекс конкретной аннотации внутри `AnnotationData`
+        guard let annotationIndex = annotations[annotationDataIndex].annotations.firstIndex(where: { $0.id == annotation.id }) else {
+            print("Конкретная аннотация не найдена.")
+            return
+        }
+        
+        // Обновить класс аннотации
+        annotations[annotationDataIndex].annotations[annotationIndex].label = newClassName
+        
+        // Сохранить обновленные аннотации
+        saveAnnotationsToFile()
     }
 }

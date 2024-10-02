@@ -15,11 +15,6 @@ class ProjectDataViewModel: ObservableObject {
     @Published var selectedImageURL: URL?
     @Published var projectURL: URL?
 
-
-    
-   // func openProject() -> Bool {
-
-   // }
     
     
     func createNewProject() {

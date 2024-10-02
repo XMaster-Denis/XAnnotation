@@ -11,7 +11,7 @@ import SwiftUI
 struct XAnnotationApp: App {
 
     @StateObject var projectData: ProjectDataViewModel = ProjectDataViewModel.init()
-    @StateObject var krestViewModel: СrossViewModel = СrossViewModel.init()
+    @StateObject var krestViewModel: СrossViewModel = СrossViewModel.shared
     @StateObject var classData: ClassDataViewModel = ClassDataViewModel.init(projectData: ProjectDataViewModel())
     @StateObject var annotationsData: AnnotationViewModel = AnnotationViewModel.init(projectData: ProjectDataViewModel())
     @StateObject var imageThumbnailsData: ImageThumbnailsViewModel = ImageThumbnailsViewModel.init(projectData: ProjectDataViewModel())

@@ -8,6 +8,8 @@
 import Foundation
 
 class СrossViewModel: ObservableObject {
+    static let shared = СrossViewModel()
+    
     @Published var hoverLocation: CGPoint = .zero
     @Published var isHovering = false
     

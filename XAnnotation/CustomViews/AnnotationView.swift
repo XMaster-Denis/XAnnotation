@@ -1,34 +1,28 @@
 import SwiftUI
 
 struct AnnotationView: View {
-
+    
     
     @State private var currentRect: CGRect = .zero
     @State private var isDrawing = false
     @State private var selectedAnnotationID: UUID? = nil
-    @State private var hoverLocation: CGPoint = .zero
-    @State private var isHovering = false
     
     @EnvironmentObject var annotationsData: AnnotationViewModel
     @EnvironmentObject var projectData: ProjectDataViewModel
     @EnvironmentObject var classData: ClassDataViewModel
-    @EnvironmentObject var krestData: СrossViewModel
-    
+
+    let updateCrossData: (CGPoint) -> Void
+    let updateCrossStatus: (Bool) -> Void
     
     var body: some View {
         
         
         GeometryReader { containerGeometry in
             let containerSize = containerGeometry.size
-            //let imageURL2 = projectData.projectURL!.appendingPathComponent("thumbnails").appendingPathComponent(projectData.selectedFolder!).appendingPathComponent(projectData.selectedImageURL!.lastPathComponent)
+
             ZStack {
                 if let imageURL = projectData.selectedImageURL, let nsImage = NSImage(contentsOf: imageURL),
                    let pixelSize = nsImage.pixelSize  {
-                    // Вычисляем аспектное соотношение изображения
-                    //let imageAspectRatio = nsImage.size.width / nsImage.size.height
-                    
-                    
-                        
                     
                     // Вычисляем аспектное соотношение изображения
                     let imageAspectRatio = pixelSize.width / pixelSize.height
@@ -47,7 +41,7 @@ struct AnnotationView: View {
                     //let imageScale = nsImage.size.width / imageSize.width
                     let imageScale = pixelSize.width / imageSize.width
                     
-                    СrossView(imageOrigin: imageOrigin, imageSize: imageSize)
+                    
                     
                     //Image(nsImage: nsImage)
                     Rectangle()
@@ -104,20 +98,13 @@ struct AnnotationView: View {
                         .onContinuousHover { phase in
                             switch phase {
                             case .active(let location):
-                                krestData.hoverLocation = location
-                                krestData.isHovering = true
+                                updateCrossData(location)
+                                updateCrossStatus(true)
                             case .ended:
-                                krestData.isHovering = false
+                                updateCrossStatus(false)
                             }
                         }
-                        .overlay {
-                            if isHovering {
-                                Text("\(pixelSize)")
-                               // Text("x: \(hoverLocation.x), y: \(hoverLocation.y)")
-                                    .foregroundColor(.green)
-                                    .font(.title)
-                            }
-                        }
+                    
                     
                     // Рисуем текущий прямоугольник аннотации
                     if isDrawing {
@@ -172,7 +159,7 @@ struct AnnotationView: View {
                             )
                             
                             Rectangle()
-                                .stroke(classData.color.toColor(), lineWidth: 5)
+                                .strokeBorder(classData.color.toColor(), lineWidth: 5)
                                 .frame(width: annotationRect.width, height: annotationRect.height)
                                 .position(
                                     x: annotationRect.midX,
@@ -181,31 +168,40 @@ struct AnnotationView: View {
                                 .onTapGesture {
                                     selectedAnnotationID = annotation.id
                                 }
-                            
-                            
-                            // Если аннотация выбрана, отображаем маркеры
-                            //   if selectedAnnotationID != annotation.id {
-                            // Размер маркера
-                            
-                            
-                            
-                            // Добавляем маркеры
-                            ResizableHandle(position: .topLeft,  currentRect: annotationRect, imageOrigin: imageOrigin, onDrag: { newPosition in
-                                annotationsData.resizeAnnotation(annotation: annotation, handle: .topLeft, newPosition: newPosition, imageScale: imageScale, imageSize: imageSize)
-                            })
-                            
-                            ResizableHandle(position: .topRight, currentRect: annotationRect, imageOrigin: imageOrigin, onDrag: { newPosition in
-                                annotationsData.resizeAnnotation(annotation: annotation, handle: .topRight, newPosition: newPosition, imageScale: imageScale, imageSize: imageSize)
-                            })
-                            
-                            ResizableHandle(position: .bottomLeft, currentRect: annotationRect, imageOrigin: imageOrigin, onDrag: { newPosition in
-                                annotationsData.resizeAnnotation(annotation: annotation, handle: .bottomLeft, newPosition: newPosition, imageScale: imageScale, imageSize: imageSize)
-                            })
-                            
-                            ResizableHandle(position: .bottomRight, currentRect: annotationRect, imageOrigin: imageOrigin, onDrag: { newPosition in
-                                annotationsData.resizeAnnotation(annotation: annotation, handle: .bottomRight, newPosition: newPosition, imageScale: imageScale, imageSize: imageSize)
-                            })
-                            // }
+                                .overlay {
+                                    
+                                    // Добавляем маркеры
+                                    ResizableHandle(position: .topLeft,  currentRect: annotationRect, imageOrigin: imageOrigin, onDrag: { newPosition in
+                                        annotationsData.resizeAnnotation(annotation: annotation, handle: .topLeft, newPosition: newPosition, imageScale: imageScale, imageSize: imageSize)
+                                    })
+                                    
+                                    ResizableHandle(position: .topRight, currentRect: annotationRect, imageOrigin: imageOrigin, onDrag: { newPosition in
+                                        annotationsData.resizeAnnotation(annotation: annotation, handle: .topRight, newPosition: newPosition, imageScale: imageScale, imageSize: imageSize)
+                                    })
+                                    
+                                    ResizableHandle(position: .bottomLeft, currentRect: annotationRect, imageOrigin: imageOrigin, onDrag: { newPosition in
+                                        annotationsData.resizeAnnotation(annotation: annotation, handle: .bottomLeft, newPosition: newPosition, imageScale: imageScale, imageSize: imageSize)
+                                    })
+                                    
+                                    ResizableHandle(position: .bottomRight, currentRect: annotationRect, imageOrigin: imageOrigin, onDrag: { newPosition in
+                                        annotationsData.resizeAnnotation(annotation: annotation, handle: .bottomRight, newPosition: newPosition, imageScale: imageScale, imageSize: imageSize)
+                                    })
+                                }
+                                .contextMenu {
+ 
+                                  
+                                    Menu {
+                                        ClassMenuView(annotation: annotation)
+                                        
+                                    } label: {
+                                        Label("Change class", systemImage: "ellipsis.circle")
+                                    }
+                                    Divider()
+                                    Button("Delete annotation") {
+                                        annotationsData.deleteAnnotation(annotation: annotation)
+                                    }
+                                    .menuOrder(.fixed)
+                                }
                         }
                     }
                     
@@ -224,6 +220,9 @@ struct AnnotationView: View {
     
     
 }
+
+
+
 
 
 //struct AnnotationView_Previews: PreviewProvider {

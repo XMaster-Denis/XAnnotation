@@ -6,7 +6,7 @@ struct ResizableHandle: View {
     }
 
     let position: HandlePosition
-    let handleSize: CGFloat = CGFloat.random(in: 3...15)//12
+    let handleSize: CGFloat = 12
     let currentRect: CGRect
     let imageOrigin: CGPoint
 
@@ -24,7 +24,7 @@ struct ResizableHandle: View {
             )
             .position(handlePosition())
             .gesture(
-                DragGesture(minimumDistance: 5)
+                DragGesture(minimumDistance: 3)
                     .onChanged { value in
                         let newPosition = CGPoint(
                             x: value.location.x - imageOrigin.x,

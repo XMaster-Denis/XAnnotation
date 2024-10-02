@@ -30,6 +30,7 @@
 		E2868E992CA487550020BAA2 /* ImageThumbnailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2868E982CA487550020BAA2 /* ImageThumbnailsView.swift */; };
 		E2DEAB772C99CB6B00ABC62C /* ProjectSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DEAB762C99CB6B00ABC62C /* ProjectSettings.swift */; };
 		E2DEAB792C99E48500ABC62C /* ClassData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DEAB782C99E48500ABC62C /* ClassData.swift */; };
+		E2E034562CADE602003D5150 /* ClassMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E034552CADE602003D5150 /* ClassMenuView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +59,7 @@
 		E2868E982CA487550020BAA2 /* ImageThumbnailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageThumbnailsView.swift; sourceTree = "<group>"; };
 		E2DEAB762C99CB6B00ABC62C /* ProjectSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectSettings.swift; sourceTree = "<group>"; };
 		E2DEAB782C99E48500ABC62C /* ClassData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassData.swift; sourceTree = "<group>"; };
+		E2E034552CADE602003D5150 /* ClassMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassMenuView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +116,7 @@
 		E2105F7F2C9968060032250E /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
+				E2E034552CADE602003D5150 /* ClassMenuView.swift */,
 				E27BC2192CA7184F00154AB3 /* StaticImageView.swift */,
 				E2868E982CA487550020BAA2 /* ImageThumbnailsView.swift */,
 				E2868E912C9DF94E0020BAA2 /* ResizableHandle.swift */,
@@ -244,6 +247,7 @@
 				E2105F8F2C99BB410032250E /* Extension+URL.swift in Sources */,
 				E2105F832C9970EE0032250E /* AnnotationView.swift in Sources */,
 				E27BC2142CA6D0D200154AB3 /* ClassDataViewModel.swift in Sources */,
+				E2E034562CADE602003D5150 /* ClassMenuView.swift in Sources */,
 				E2105F712C9967A70032250E /* XAnnotationApp.swift in Sources */,
 				E27BC21C2CA7210200154AB3 /* СrossViewModel.swift in Sources */,
 				E27BC2162CA6E62400154AB3 /* ImageThumbnailsViewModel.swift in Sources */,

@@ -19,7 +19,7 @@ struct ContentView: View {
     @EnvironmentObject var projectData: ProjectDataViewModel
     @EnvironmentObject var classData: ClassDataViewModel
     @EnvironmentObject var imageThumbnailsData: ImageThumbnailsViewModel
-    
+        // @EnvironmentObject var krestData: СrossViewModel
 
     
     var body: some View {
@@ -32,7 +32,6 @@ struct ContentView: View {
                 .padding()
     
                 Button("Открыть проект") {
-                    print("ProjectData.projectURL")
                     let dialog = NSOpenPanel()
                     dialog.title = "Выберите папку проекта"
                     dialog.canChooseDirectories = true
@@ -46,6 +45,19 @@ struct ContentView: View {
                         if projectData.selectedFolder != nil {
                             imageThumbnailsData.loadImagesForSelectedFolder()
                         }
+                    }
+                }
+                .onAppear {
+                    let projectPath = "/Users/xmaster/Pictures/Новый проект/"
+                    let projectURL = URL(fileURLWithPath: projectPath)
+                    print("Programmatic URL absoluteString: \(projectURL.absoluteString)")
+                    print("Programmatic URL path: \(projectURL.path)")
+                    projectData.projectURL = projectURL
+                    projectData.loadProjectSettings()
+                    classData.loadClassListFromFile()
+                    annotationsData.loadAnnotationsFromFile()
+                    if projectData.selectedFolder != nil {
+                        imageThumbnailsData.loadImagesForSelectedFolder()
                     }
                 }
                 .padding()
@@ -155,7 +167,12 @@ struct ContentView: View {
                             ZStack {
                                 StaticImageView()
                                 
-                                AnnotationView()
+//                                AnnotationView()
+                                AnnotationView(
+                                    //imageGeometry: imageGeometry,
+                                    updateCrossData: { СrossViewModel.shared.updateCrossData($0) },
+                                                                    updateCrossStatus: { СrossViewModel.shared.updateCrossStatus($0) }
+                                                                )
                             }
                         } else {
                             Text("Выберите изображение для аннотирования")
