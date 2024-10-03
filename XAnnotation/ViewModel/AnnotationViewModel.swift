@@ -15,6 +15,56 @@ class AnnotationViewModel: ObservableObject {
         self.projectData = projectData
     }
     
+    // Функция для удаления всех аннотаций текущего изображения
+    func deleteAllAnnotationsForCurrentImage() {
+        guard let projectURL = projectData.projectURL else {
+            print("Проект не установлен.")
+            return
+        }
+        
+        guard let imageURL = projectData.selectedImageURL else {
+            print("imageURL не установлен.")
+            return
+        }
+        
+        let absoluteImagePath = imageURL.path
+        let projectPath = projectURL.path
+        
+        guard absoluteImagePath.hasPrefix(projectPath) else {
+            print("Изображение не находится в корневой папке проекта.")
+            return
+        }
+        
+        let relativePath = String(absoluteImagePath.dropFirst(projectPath.count + 1))
+        
+        // Найти индекс `AnnotationData` для текущего изображения
+        guard let annotationDataIndex = annotations.firstIndex(where: { $0.imagePath == relativePath }) else {
+            print("Аннотация для изображения не найдена.")
+            return
+        }
+        
+        // Найти индекс конкретной аннотации внутри `AnnotationData`
+        for currentImageAnnotation in currentImageAnnotations {
+            guard let annotationIndex = annotations[annotationDataIndex].annotations.firstIndex(where: { $0.id == currentImageAnnotation.id }) else {
+                print("Конкретная аннотация не найдена.")
+                return
+            }
+            
+            // Удалить аннотацию
+            annotations[annotationDataIndex].annotations.remove(at: annotationIndex)
+            
+
+        }
+
+        // Если для изображения больше нет аннотаций, удалить `AnnotationData`
+        if annotations[annotationDataIndex].annotations.isEmpty {
+            annotations.remove(at: annotationDataIndex)
+        }
+        
+        // Сохранить обновленные аннотации
+        saveAnnotationsToFile()
+    }
+    
     func numberOfAnnotations(for imagePath: URL) -> Int {
 
         let pathComponents = imagePath.pathComponents

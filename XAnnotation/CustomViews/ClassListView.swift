@@ -15,14 +15,14 @@ struct ClassListView: View {
     @EnvironmentObject var annotationsData: AnnotationViewModel
     
     @State private var newClassName: String = ""
-    @State private var selectedClass: ClassData?
+    //@State private var selectedClass: ClassData?
     
     var body: some View {
         VStack(alignment: .leading) {
             Text("Список классов:")
                 .font(.headline)
             
-            List(selection: $selectedClass) {
+            List(selection: $classData.selectedClass) {
                 ForEach($classData.classList) { $classData in
                     ClassRowView(
                         currentClassData: $classData,
@@ -32,9 +32,9 @@ struct ClassListView: View {
                 }
                 .onDelete(perform: deleteClassAt)
             }
-            .onChange(of: selectedClass) { oldValue, newValue in
-                classData.selectedClass = newValue
-            }
+//            .onChange(of: selectedClass) { oldValue, newValue in
+//                classData.selectedClass = newValue
+//            }
             
             VStack {
                 TextField("Добавить класс", text: $newClassName)

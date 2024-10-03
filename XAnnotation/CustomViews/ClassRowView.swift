@@ -107,7 +107,7 @@ struct ClassRowView: View {
     private func saveChanges() {
         let trimmedName = editedClassName.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        //let oldClassName = classData.name
+        let oldClassName = currentClassData.name
         
         // 1. Проверка на пустое имя
         if trimmedName.isEmpty {
@@ -138,7 +138,10 @@ struct ClassRowView: View {
         classData.classList[index].name = trimmedName
         currentClassData.color = ColorData.fromColor(selectedColor)
         saveClassListToFile()
-        
+        annotationsData.updateAnnotations(from: oldClassName, to: trimmedName)
+    //    if classData.selectedClass == nil {
+        classData.selectedClass = classData.classList[index]
+   //     }
         // Закрываем системную панель выбора цвета
         NSColorPanel.shared.close()
         editedClassName = ""

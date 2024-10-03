@@ -25,7 +25,7 @@ struct ContentView: View {
     var body: some View {
         VStack {
             // Верхние кнопки
-            HStack {
+            HStack (spacing : 0) {
                 Button("Создать новый проект") {
                     projectData.createNewProject()
                 }
@@ -63,8 +63,8 @@ struct ContentView: View {
                 .padding()
     
                 if !annotationsData.annotations.isEmpty {
-                    Button("Сохранить аннотации") {
-                        annotationsData.saveAnnotationsToFile()
+                    Button("Удалить все аннотации") {
+                        annotationsData.deleteAllAnnotationsForCurrentImage()
                     }
                     .padding()
                 }
@@ -355,6 +355,8 @@ struct ContentView: View {
         processImages(testImages, to: testURL)
         processImages(validImages, to: validURL)
         
+        // Открываем папку 'Training data' в Finder
+        NSWorkspace.shared.open(trainingDataURL)
         print("Экспорт в CreateML завершён.")
     }
     

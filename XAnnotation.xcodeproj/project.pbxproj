@@ -92,12 +92,12 @@
 		E2105F6F2C9967A70032250E /* XAnnotation */ = {
 			isa = PBXGroup;
 			children = (
+				E2105F722C9967A70032250E /* ContentView.swift */,
 				E2868E932CA43F280020BAA2 /* ViewModel */,
 				E2105F8B2C99B83F0032250E /* Extensions */,
 				E2105F7F2C9968060032250E /* CustomViews */,
 				E2105F702C9967A70032250E /* XAnnotationApp.swift */,
 				E2105F842C9971180032250E /* Model */,
-				E2105F722C9967A70032250E /* ContentView.swift */,
 				E2105F742C9967A80032250E /* Assets.xcassets */,
 				E2105F792C9967A80032250E /* XAnnotation.entitlements */,
 				E2105F762C9967A80032250E /* Preview Content */,
