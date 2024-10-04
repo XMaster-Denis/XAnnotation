@@ -48,17 +48,17 @@ struct ContentView: View {
                     }
                 }
                 .onAppear {
-                    let projectPath = "/Users/xmaster/Pictures/Новый проект/"
-                    let projectURL = URL(fileURLWithPath: projectPath)
-                    print("Programmatic URL absoluteString: \(projectURL.absoluteString)")
-                    print("Programmatic URL path: \(projectURL.path)")
-                    projectData.projectURL = projectURL
-                    projectData.loadProjectSettings()
-                    classData.loadClassListFromFile()
-                    annotationsData.loadAnnotationsFromFile()
-                    if projectData.selectedFolder != nil {
-                        imageThumbnailsData.loadImagesForSelectedFolder()
-                    }
+//                    let projectPath = "/Users/xmaster/Pictures/Новый проект/"
+//                    let projectURL = URL(fileURLWithPath: projectPath)
+//                    print("Programmatic URL absoluteString: \(projectURL.absoluteString)")
+//                    print("Programmatic URL path: \(projectURL.path)")
+//                    projectData.projectURL = projectURL
+//                    projectData.loadProjectSettings()
+//                    classData.loadClassListFromFile()
+//                    annotationsData.loadAnnotationsFromFile()
+//                    if projectData.selectedFolder != nil {
+//                        imageThumbnailsData.loadImagesForSelectedFolder()
+//                    }
                 }
                 .padding()
     

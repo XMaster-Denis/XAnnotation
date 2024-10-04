@@ -6,11 +6,13 @@ struct AnnotationView: View {
     @State private var currentRect: CGRect = .zero
     @State private var isDrawing = false
     @State private var selectedAnnotationID: UUID? = nil
+    @FocusState private var focused: Bool
     
     @EnvironmentObject var annotationsData: AnnotationViewModel
     @EnvironmentObject var projectData: ProjectDataViewModel
     @EnvironmentObject var classData: ClassDataViewModel
-
+    @EnvironmentObject var imageThumbnailsData: ImageThumbnailsViewModel
+    
     let updateCrossData: (CGPoint) -> Void
     let updateCrossStatus: (Bool) -> Void
     
@@ -51,6 +53,15 @@ struct AnnotationView: View {
                             x: imageOrigin.x + imageSize.width / 2,
                             y: imageOrigin.y + imageSize.height / 2
                         )
+                        .focusable()
+                        .focused($focused)
+                        .onKeyPress(.space, action: {
+                            imageThumbnailsData.goToNextImage()
+                            return .ignored
+                        })
+                        .onAppear {
+                            focused = true
+                        }
                         .gesture(
                             DragGesture(minimumDistance: 2)
                                 .onChanged { value in
@@ -214,6 +225,8 @@ struct AnnotationView: View {
                         .frame(width: containerSize.width, height: containerSize.height)
                 }
             }
+
+
             .frame(width: containerSize.width, height: containerSize.height)
         }
     }

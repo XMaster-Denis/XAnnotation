@@ -22,6 +22,19 @@ class ImageThumbnailsViewModel: ObservableObject {
         self.projectData = projectData
     }
     
+    func goToNextImage() {
+        // Реализация перехода к следующему изображению
+        // Например:
+        if let currentIndex = imageURLs.firstIndex(of: projectData.selectedImageURL!) {
+            let nextIndex = imageURLs.index(after: currentIndex)
+            if nextIndex < imageURLs.endIndex {
+                projectData.selectedImageURL = imageURLs[nextIndex]
+            } else {
+                // Если достигли конца, можно вернуться к первому изображению или ничего не делать
+                // projectData.selectedImageURL = imageThumbnailsData.imageURLs.first
+            }
+        }
+    }
     
     func loadImagesForSelectedFolder() {
         guard let projectURL = projectData.projectURL, let selectedFolder = projectData.selectedFolder else {
