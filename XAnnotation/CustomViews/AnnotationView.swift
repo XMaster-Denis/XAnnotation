@@ -53,17 +53,17 @@ struct AnnotationView: View {
                             x: imageOrigin.x + imageSize.width / 2,
                             y: imageOrigin.y + imageSize.height / 2
                         )
-                        .focusable()
-                        .focused($focused)
-                        .onKeyPress(.space, action: {
-                            imageThumbnailsData.goToNextImage()
-                            return .ignored
-                        })
-                        .onAppear {
-                            focused = true
-                        }
+//                        .focusable()
+//                        .focused($focused)
+//                        .onKeyPress(.space, action: {
+//                            imageThumbnailsData.goToNextImage()
+//                            return .ignored
+//                        })
+//                        .onAppear {
+//                            focused = true
+//                        }
                         .gesture(
-                            DragGesture(minimumDistance: 2)
+                            DragGesture(minimumDistance: 1)
                                 .onChanged { value in
                                     let location = CGPoint(
                                         x: value.location.x - imageOrigin.x,

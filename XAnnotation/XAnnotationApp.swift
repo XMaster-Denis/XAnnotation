@@ -11,6 +11,7 @@ import SwiftUI
 struct XAnnotationApp: App {
 
     @StateObject var projectData: ProjectDataViewModel = ProjectDataViewModel.init()
+    @StateObject var exportViewModel: ExportViewModel = ExportViewModel.init()
     @StateObject var krestViewModel: СrossViewModel = СrossViewModel.shared
     @StateObject var classData: ClassDataViewModel = ClassDataViewModel.init(projectData: ProjectDataViewModel())
     @StateObject var annotationsData: AnnotationViewModel = AnnotationViewModel.init(projectData: ProjectDataViewModel())
@@ -19,6 +20,7 @@ struct XAnnotationApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(exportViewModel)
                 .environmentObject(annotationsData)
                 .environmentObject(krestViewModel)
                 .environmentObject(projectData)

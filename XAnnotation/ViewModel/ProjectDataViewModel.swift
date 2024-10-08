@@ -11,7 +11,7 @@ class ProjectDataViewModel: ObservableObject {
     @Published var projectSettings: ProjectSettings = .init()
     @Published var foldersInProject: [String] = []
     @Published var selectedFolder: String?
-
+    @Published var allowImageRotation: Bool = false
     @Published var selectedImageURL: URL?
     @Published var projectURL: URL?
 

@@ -31,6 +31,7 @@
 		E2DEAB772C99CB6B00ABC62C /* ProjectSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DEAB762C99CB6B00ABC62C /* ProjectSettings.swift */; };
 		E2DEAB792C99E48500ABC62C /* ClassData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DEAB782C99E48500ABC62C /* ClassData.swift */; };
 		E2E034562CADE602003D5150 /* ClassMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E034552CADE602003D5150 /* ClassMenuView.swift */; };
+		E2E9717D2CB598D9004D0165 /* ExportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E9717C2CB598D9004D0165 /* ExportViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +61,7 @@
 		E2DEAB762C99CB6B00ABC62C /* ProjectSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectSettings.swift; sourceTree = "<group>"; };
 		E2DEAB782C99E48500ABC62C /* ClassData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassData.swift; sourceTree = "<group>"; };
 		E2E034552CADE602003D5150 /* ClassMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassMenuView.swift; sourceTree = "<group>"; };
+		E2E9717C2CB598D9004D0165 /* ExportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +154,7 @@
 		E2868E932CA43F280020BAA2 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				E2E9717C2CB598D9004D0165 /* ExportViewModel.swift */,
 				E27BC2152CA6E62400154AB3 /* ImageThumbnailsViewModel.swift */,
 				E27BC2132CA6D0D200154AB3 /* ClassDataViewModel.swift */,
 				E2868E942CA43FAE0020BAA2 /* AnnotationViewModel.swift */,
@@ -242,6 +245,7 @@
 				E2105F732C9967A70032250E /* ContentView.swift in Sources */,
 				E2868E872C9C34870020BAA2 /* ClassRowView.swift in Sources */,
 				E2105F862C99713A0032250E /* Annotation.swift in Sources */,
+				E2E9717D2CB598D9004D0165 /* ExportViewModel.swift in Sources */,
 				E2868E952CA43FBF0020BAA2 /* AnnotationViewModel.swift in Sources */,
 				E2868E852C9C2FF60020BAA2 /* ClassListView.swift in Sources */,
 				E2105F8F2C99BB410032250E /* Extension+URL.swift in Sources */,
