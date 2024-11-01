@@ -16,6 +16,10 @@ struct MenuCommands: Commands {
         CommandMenu("Settings") {
             Menu("Export settings"){
                 Toggle("Rotate output images", isOn: $projectData.allowImageRotation)
+                Divider()
+                Button("Export proportions") {
+                    settings.showExportSettingsView = true
+                }
             }
             
             Picker(selection: $settings.language, label: Text("Language")) {

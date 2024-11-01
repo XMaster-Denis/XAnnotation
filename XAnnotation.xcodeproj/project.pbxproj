@@ -34,6 +34,7 @@
 		E2DEAB792C99E48500ABC62C /* ClassData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DEAB782C99E48500ABC62C /* ClassData.swift */; };
 		E2E034562CADE602003D5150 /* ClassMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E034552CADE602003D5150 /* ClassMenuView.swift */; };
 		E2E9717D2CB598D9004D0165 /* ExportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E9717C2CB598D9004D0165 /* ExportViewModel.swift */; };
+		E2FF1AD92CD4FF7800B158F1 /* ExportSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FF1AD82CD4FF7800B158F1 /* ExportSettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +67,7 @@
 		E2DEAB782C99E48500ABC62C /* ClassData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassData.swift; sourceTree = "<group>"; };
 		E2E034552CADE602003D5150 /* ClassMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassMenuView.swift; sourceTree = "<group>"; };
 		E2E9717C2CB598D9004D0165 /* ExportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportViewModel.swift; sourceTree = "<group>"; };
+		E2FF1AD82CD4FF7800B158F1 /* ExportSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportSettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +125,7 @@
 		E2105F7F2C9968060032250E /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
+				E2FF1AD82CD4FF7800B158F1 /* ExportSettingsView.swift */,
 				E2E034552CADE602003D5150 /* ClassMenuView.swift */,
 				E27BC2192CA7184F00154AB3 /* StaticImageView.swift */,
 				E2868E982CA487550020BAA2 /* ImageThumbnailsView.swift */,
@@ -271,6 +274,7 @@
 				E27BC21C2CA7210200154AB3 /* СrossViewModel.swift in Sources */,
 				E237FAFE2CCAB98F00123A39 /* MenuCommands.swift in Sources */,
 				E27BC2162CA6E62400154AB3 /* ImageThumbnailsViewModel.swift in Sources */,
+				E2FF1AD92CD4FF7800B158F1 /* ExportSettingsView.swift in Sources */,
 				E2105F812C99684C0032250E /* AsyncImageView.swift in Sources */,
 				E2DEAB792C99E48500ABC62C /* ClassData.swift in Sources */,
 			);

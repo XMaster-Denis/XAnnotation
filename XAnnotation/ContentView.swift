@@ -13,6 +13,7 @@ struct ContentView: View {
     @State private var showSaveAlert: Bool = false
     @State private var saveAlertMessage: String = ""
     
+    @ObservedObject var settings: Settings = Settings.shared
     
     @EnvironmentObject var annotationsData: AnnotationViewModel
     @EnvironmentObject var projectData: ProjectDataViewModel
@@ -87,70 +88,7 @@ struct ContentView: View {
                         // Левая часть: миниатюры изображений
                         Divider()
                         
-                        VStack {
-                            // Список папок
-                            
-                            ScrollView(.vertical) {
-                                VStack(alignment: .leading) {
-                                    ForEach(projectData.foldersInProject, id: \.self) { folderName in
-                                        Button(action: {
-                                            projectData.selectedFolder = folderName
-                                            imageThumbnailsData.loadImagesForSelectedFolder()
-                                            
-                                        }) {
-                                            Text(folderName)
-                                                .bold()
-                                                .cornerRadius(5)
-                                                .frame(maxWidth: .infinity, alignment: .leading)
-                                        }
-                                        .background(projectData.selectedFolder == folderName ? Color.blue.opacity(1) : Color.clear)
-                                    }
-                                }
-                            }
-                            .frame(maxHeight: 200)
-                            
-                            // Кнопка для добавления новой папки
-                            Button(action: addImageFolder) {
-                                Text("Добавить папку с изображениями")
-                            }
-                            
-                            // Отображение миниатюр изображений
-                            ScrollView(.vertical) {
-                                LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))]) {
-                                    ForEach(imageThumbnailsData.thumbnailURLs, id: \.self) { url in
-                                        ZStack (alignment: .topTrailing) {
-                                            
-                                            Button(action: {
-                                                projectData.selectedImageURL = imageThumbnailsData.getImageURL(forThumbnailURL: url)
-
-                                                projectData.saveProjectSettings()
-                                            }) {
-                                                AsyncImageView(url: url, size: CGSize(width: 120, height: 120))
-                                                    .padding(2)
-                                                    .border(projectData.selectedImageURL == imageThumbnailsData.getImageURL(forThumbnailURL: url) ? Color.blue : Color.clear, width: 2)
-                                                
-                                            }
-                                            .buttonStyle(PlainButtonStyle())
-                                            let numberOfAnnotations: Int = annotationsData.numberOfAnnotations(for: url)
-                                            Text("\(numberOfAnnotations)")
-                                                .padding(.horizontal, 3)
-                                                .padding(.vertical, 1)
-                                            
-                                                .background(
-                                                    RoundedRectangle(cornerRadius: 5)
-                                                        .fill(Color.green)
-                                                )
-                                                .foregroundColor(.red)
-                                                .font(.title)
-                                                .offset(x: -5, y: 5)
-                                            
-                                            
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        .frame(minWidth: 100, maxWidth: 150)
+                        ImageThumbnailsView()
                         
                         Divider()
                         
@@ -159,16 +97,13 @@ struct ContentView: View {
                             if projectData.selectedImageURL != nil {
                                 ZStack {
                                     StaticImageView()
-                                    
-                                    //                                AnnotationView()
                                     AnnotationView(
-                                        //imageGeometry: imageGeometry,
                                         updateCrossData: { СrossViewModel.shared.updateCrossData($0) },
                                         updateCrossStatus: { СrossViewModel.shared.updateCrossStatus($0) }
                                     )
                                 }
                             } else {
-                                Text("Выберите изображение для аннотирования")
+                                Text("Select an image to annotate")
                                     .padding()
                             }
                         }
@@ -180,13 +115,16 @@ struct ContentView: View {
                     }
                 } else {
                     Spacer()
-                    Text("Проект не выбран")
+                    Text("Project not selected")
                         .padding()
                     Spacer()
                 }
             }
             .alert(isPresented: $showSaveAlert) {
                 Alert(title: Text("Сохранение аннотаций"), message: Text(saveAlertMessage), dismissButton: .default(Text("OK")))
+            }
+            .sheet(isPresented: $settings.showExportSettingsView) {
+                ExportSettingsView()
             }
             .frame(minWidth: 800, minHeight: 600)
         }
@@ -227,7 +165,7 @@ struct ContentView: View {
                 return
             }
         } else {
-            // Если папки не существует, создаём её
+            // If the folder does not exist, create it
             do {
                 try fileManager.createDirectory(at: trainingDataURL, withIntermediateDirectories: true, attributes: nil)
                 print("Папка 'Training data' создана.")
@@ -237,7 +175,7 @@ struct ContentView: View {
             }
         }
         
-        // Создаём папки train, test и valid внутри Training data
+        // Create the train, test and valid folders inside Training data
         let trainURL = trainingDataURL.appendingPathComponent("train")
         let testURL = trainingDataURL.appendingPathComponent("test")
         let validURL = trainingDataURL.appendingPathComponent("valid")
@@ -327,126 +265,9 @@ struct ContentView: View {
                 NSWorkspace.shared.open(trainingDataURL)
                 print("Экспорт в CreateML завершён.")
             }
-            
-//            // Обрабатываем папку 'all' со всеми изображениями
-//            processImages(allAnnotatedImages, to: allURL)
-//            // Обрабатываем каждую из папок train, test, valid
-//            processImages(trainImages, to: trainURL)
-//            processImages(testImages, to: testURL)
-//            processImages(validImages, to: validURL)
-            
-//            // Открываем папку 'Training data' в Finder
-//            NSWorkspace.shared.open(trainingDataURL)
-//            print("Экспорт в CreateML завершён.")
         }
     
-    // MARK: - Функции для управления проектом и аннотациями
-
-    // Функция для копирования и переименования изображений, а также формирования аннотаций
-//    func processImages(_ images: [AnnotationData], to folderURL: URL) {
-//        guard let projectURL = projectData.projectURL else {
-//            print("Проект не выбран.")
-//            return
-//        }
-//  
-//        
-//        var jsonAnnotations: [CreateMLAnnotation] = []
-//        let allowRotation = projectData.allowImageRotation
-//        let rotations = allowRotation ? [0, 90, 180, 270] : [0]
-//        
-//        for annotationData in images {
-//            for rotationAngle in rotations {
-//                // Получаем UUID и исходное расширение файла
-//                let uuid = annotationData.id.uuidString
-//                let originalImagePath = annotationData.imagePath
-//                let originalExtension = (originalImagePath as NSString).pathExtension
-//                let newImageName = "\(uuid).\(originalExtension)"
-//                
-//                // Определяем пути исходного и целевого изображений
-//                let sourceImageURL = projectURL.appendingPathComponent(originalImagePath)
-//                let destinationImageURL = folderURL.appendingPathComponent(newImageName)
-//                
-//                // Загружаем исходное изображение
-//                guard let image = NSImage(contentsOf: sourceImageURL) else {
-//                    print("Не удалось загрузить изображение \(originalImagePath)")
-//                    continue
-//                }
-//                
-//                // Поворачиваем изображение, если требуется
-//                let rotatedImage = rotateImage(image: image, byDegrees: rotationAngle)
-//                
-//                
-//                
-//                // Копируем изображение
-////                do {
-////                    try fileManager.copyItem(at: sourceImageURL, to: destinationImageURL)
-////                    //  print("Изображение \(originalImagePath) скопировано как \(newImageName) в папку \(folderURL.lastPathComponent).")
-////                } catch {
-////                    print("Ошибка при копировании изображения \(originalImagePath): \(error.localizedDescription)")
-////                    continue
-////                }
-//                
-//                // Сохраняем повернутое изображение
-//                 do {
-//                     if let tiffData = rotatedImage.tiffRepresentation,
-//                        let bitmap = NSBitmapImageRep(data: tiffData),
-//                        let data = bitmap.representation(using: .jpeg, properties: [:]) {
-//                         try data.write(to: destinationImageURL)
-//                         // print("Изображение \(originalImagePath) повернуто на \(rotationAngle)° и сохранено как \(newImageName)")
-//                     } else {
-//                         print("Ошибка при сохранении изображения \(newImageName)")
-//                         continue
-//                     }
-//                 } catch {
-//                     print("Ошибка при сохранении изображения \(newImageName): \(error.localizedDescription)")
-//                     continue
-//                 }
-//                
-//                // Преобразуем аннотации в соответствии с поворотом
-//                let transformedAnnotations = transformAnnotations(annotationData.annotations, rotationAngle: rotationAngle, imageSize: image.size)
-//                
-//                
-//                // Формируем аннотации для CreateML
-//                var regions: [CreateMLRegion] = []
-//                for annotation in transformedAnnotations {
-//                    let centerX = annotation.coordinates.x + (annotation.coordinates.width / 2.0)
-//                    let centerY = annotation.coordinates.y + (annotation.coordinates.height / 2.0)
-//                    
-//                    // Создаём структуру аннотации
-//                    let region = CreateMLRegion(
-//                        label: annotation.label,
-//                        coordinates: CreateMLCoordinates(
-//                            x: centerX.rounded(),
-//                            y: centerY.rounded(),
-//                            width: annotation.coordinates.width.rounded(),
-//                            height: annotation.coordinates.height.rounded()
-//                        )
-//                    )
-//                    regions.append(region)
-//                }
-//                
-//                // Создаём структуру для JSON
-//                let createMLAnnotation = CreateMLAnnotation(
-//                    image: newImageName,
-//                    annotations: regions
-//                )
-//                jsonAnnotations.append(createMLAnnotation)
-//            }
-//            
-//            // Создаём createml.json для текущей папки
-//            let jsonURL = folderURL.appendingPathComponent("createml.json")
-//            do {
-//                let encoder = JSONEncoder()
-//                encoder.outputFormatting = .prettyPrinted
-//                let data = try encoder.encode(jsonAnnotations)
-//                try data.write(to: jsonURL)
-//                print("Файл createml.json создан в папке \(folderURL.lastPathComponent).")
-//            } catch {
-//                print("Ошибка при создании createml.json в папке \(folderURL.lastPathComponent): \(error.localizedDescription)")
-//            }
-//        }
-//    }
-//    
+   
     
     func processImages(_ images: [AnnotationData], to folderURL: URL, completion: @escaping () -> Void) {
       //  let fileManager = FileManager.default
@@ -472,8 +293,7 @@ struct ContentView: View {
                     // Определяем пути исходного и целевого изображений
                     let sourceImageURL = projectURL.appendingPathComponent(originalImagePath)
                     let destinationImageURL = folderURL.appendingPathComponent(newImageName)
-//                    let destinationImageURL2 = folderURL.appendingPathComponent("1"+newImageName)
-                    
+
                     // Загружаем исходное изображение
                     guard let image = NSImage(contentsOf: sourceImageURL) else {
                         print("Не удалось загрузить изображение \(originalImagePath)")
@@ -506,28 +326,6 @@ struct ContentView: View {
                         return
                     }
                     
-//                    do {
-//                        if let tiffData = rotatedImage.tiffRepresentation,
-//                           let bitmap = NSBitmapImageRep(data: tiffData),
-//                           let data = bitmap.representation(using: .jpeg, properties: [:]) {
-//                            try data.write(to: destinationImageURL2)
-//                            // print("Изображение \(originalImagePath) повернуто на \(rotationAngle)° и сохранено как \(newImageName)")
-//                        } else {
-//                            print("Ошибка при сохранении изображения \(newImageName)")
-//                            return
-//                        }
-//                    } catch {
-//                        print("Ошибка при сохранении изображения \(newImageName): \(error.localizedDescription)")
-//                        return
-//                    }
-                    
-                    
-                    
-                    // Преобразуем аннотации в соответствии с поворотом
-                 //   print(annotationData.annotations)
-                    // Внутри операции обработки изображения
-
-
                     // Получаем размеры изображения в пикселях
                     guard let cgImage = rotatedImage.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
                         return
@@ -708,36 +506,6 @@ struct ContentView: View {
         }
 
         return transformedAnnotations
-    }
-    
-    func addImageFolder() {
-        let openPanel = NSOpenPanel()
-        openPanel.title = "Выберите папку с изображениями для добавления в проект"
-        openPanel.canChooseFiles = false
-        openPanel.canChooseDirectories = true
-        openPanel.allowsMultipleSelection = false
-
-        if openPanel.runModal() == .OK, let sourceFolderURL = openPanel.url, let projectURL = projectData.projectURL {
-            do {
-                let folderName = sourceFolderURL.lastPathComponent
-                let destinationFolderURL = projectURL.appendingPathComponent("images").appendingPathComponent(folderName)
-
-                // Копируем папку с изображениями в проект
-                try FileManager.default.copyItem(at: sourceFolderURL, to: destinationFolderURL)
-
-                // Добавляем папку в список папок проекта
-                projectData.foldersInProject.append(folderName)
-                projectData.saveProjectSettings()
-
-                // Обновляем список изображений, если эта папка выбрана
-                projectData.selectedFolder = folderName
-                imageThumbnailsData.loadImages(from: destinationFolderURL)
-                
-
-            } catch {
-                print("Ошибка при добавлении папки с изображениями: \(error.localizedDescription)")
-            }
-        }
     }
 }
 
