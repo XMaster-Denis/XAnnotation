@@ -8,12 +8,13 @@
 import SwiftUI
 
 class ProjectDataViewModel: ObservableObject {
-    @Published var projectSettings: ProjectSettings = .init()
+    @Published var projectSettings: ProjectSettings?
     @Published var foldersInProject: [String] = []
     @Published var selectedFolder: String?
     @Published var allowImageRotation: Bool = false
     @Published var selectedImageURL: URL?
     @Published var projectURL: URL?
+    
 
     
     
@@ -29,19 +30,11 @@ class ProjectDataViewModel: ObservableObject {
             // Создаем структуру папок внутри проекта
             do {
                 let imagesFolderURL = projectFolderURL.appendingPathComponent("images")
-                let annotationsFolderURL = projectFolderURL.appendingPathComponent("annotations")
                 let settingsFolderURL = projectFolderURL.appendingPathComponent("settings")
 
                 try FileManager.default.createDirectory(at: imagesFolderURL, withIntermediateDirectories: true, attributes: nil)
-                try FileManager.default.createDirectory(at: annotationsFolderURL, withIntermediateDirectories: true, attributes: nil)
                 try FileManager.default.createDirectory(at: settingsFolderURL, withIntermediateDirectories: true, attributes: nil)
 
-               // Инициализируем пустые данные проекта
-               // self.imageURLs = []
-               // self.thumbnailURLs = []
-               // self.selectedImageURL = nil
-                //classList = []
-                //self.annotations = []
                 self.foldersInProject = []
 
                 // Сохраняем настройки проекта (если необходимо)
@@ -55,9 +48,13 @@ class ProjectDataViewModel: ObservableObject {
     
     func saveProjectSettings() {
         guard let projectURL = projectURL else { return }
-        let settingsURL = projectURL.appendingPathComponent("settings").appendingPathComponent("projectSettings.json")
+        let settingsURL = projectURL.appendingPathComponent("projectSettings.json")
 
-        let projectSettings = ProjectSettings(foldersInProject: foldersInProject, selectedFolder: selectedFolder)
+        let projectSettings = ProjectSettings(
+            foldersInProject: foldersInProject,
+            selectedFolder: selectedFolder,
+            allowImageRotation: allowImageRotation,
+            selectedImageURL: selectedImageURL?.lastPathComponent ?? "")
         do {
             let encoder = JSONEncoder()
             let data = try encoder.encode(projectSettings)
@@ -73,7 +70,7 @@ class ProjectDataViewModel: ObservableObject {
             return
         }
         
-        let settingsURL = projectURL.appendingPathComponent("settings").appendingPathComponent("projectSettings.json")
+        let settingsURL = projectURL.appendingPathComponent("projectSettings.json")
 
         do {
             let data = try Data(contentsOf: settingsURL)
@@ -81,7 +78,14 @@ class ProjectDataViewModel: ObservableObject {
             let projectSettings = try decoder.decode(ProjectSettings.self, from: data)
             self.foldersInProject = projectSettings.foldersInProject
             self.selectedFolder = projectSettings.selectedFolder
-            print("Настройки проекта успешно загружены.")
+            self.allowImageRotation = projectSettings.allowImageRotation
+            
+            if let selectedFolder = projectSettings.selectedFolder, let selectedImageURL = projectSettings.selectedImageURL {
+                self.selectedImageURL = projectURL
+                    .appendingPathComponent("images")
+                    .appendingPathComponent(selectedFolder)
+                    .appendingPathComponent(selectedImageURL)
+            }
         } catch let decodingError as DecodingError {
             switch decodingError {
             case .typeMismatch(let type, let context):

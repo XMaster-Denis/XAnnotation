@@ -14,13 +14,12 @@ struct ContentView: View {
     @State private var saveAlertMessage: String = ""
     
     
-    //var projectSettings = projectData.shared
     @EnvironmentObject var annotationsData: AnnotationViewModel
     @EnvironmentObject var projectData: ProjectDataViewModel
     @EnvironmentObject var classData: ClassDataViewModel
     @EnvironmentObject var imageThumbnailsData: ImageThumbnailsViewModel
     @EnvironmentObject var exportViewModel: ExportViewModel
-        // @EnvironmentObject var krestData: СrossViewModel
+
 
     
     var body: some View {
@@ -45,22 +44,9 @@ struct ContentView: View {
                             classData.loadClassListFromFile()
                             annotationsData.loadAnnotationsFromFile()
                             if projectData.selectedFolder != nil {
-                                imageThumbnailsData.loadImagesForSelectedFolder()
+                                imageThumbnailsData.loadImagesForSelectedFolder(firstLaunch: true)
                             }
                         }
-                    }
-                    .onAppear {
-                        //                    let projectPath = "/Users/xmaster/Pictures/Новый проект/"
-                        //                    let projectURL = URL(fileURLWithPath: projectPath)
-                        //                    print("Programmatic URL absoluteString: \(projectURL.absoluteString)")
-                        //                    print("Programmatic URL path: \(projectURL.path)")
-                        //                    projectData.projectURL = projectURL
-                        //                    projectData.loadProjectSettings()
-                        //                    classData.loadClassListFromFile()
-                        //                    annotationsData.loadAnnotationsFromFile()
-                        //                    if projectData.selectedFolder != nil {
-                        //                        imageThumbnailsData.loadImagesForSelectedFolder()
-                        //                    }
                     }
                     .padding()
                     
@@ -136,6 +122,8 @@ struct ContentView: View {
                                             
                                             Button(action: {
                                                 projectData.selectedImageURL = imageThumbnailsData.getImageURL(forThumbnailURL: url)
+
+                                                projectData.saveProjectSettings()
                                             }) {
                                                 AsyncImageView(url: url, size: CGSize(width: 120, height: 120))
                                                     .padding(2)
@@ -147,7 +135,7 @@ struct ContentView: View {
                                             Text("\(numberOfAnnotations)")
                                                 .padding(.horizontal, 3)
                                                 .padding(.vertical, 1)
-                                            //.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                                            
                                                 .background(
                                                     RoundedRectangle(cornerRadius: 5)
                                                         .fill(Color.green)
@@ -279,9 +267,9 @@ struct ContentView: View {
         let shuffledImages = allAnnotatedImages.shuffled()
         
         // Вычисляем количество изображений для каждой папки
-        var trainCount = Int(Double(totalImages) * 0.7)
-        var testCount = Int(Double(totalImages) * 0.15)
-        var validCount = Int(Double(totalImages) * 0.15)
+        var trainCount = Int(Double(totalImages) * 0.8)
+        var testCount = Int(Double(totalImages) * 0.1)
+        var validCount = Int(Double(totalImages) * 0.1)
         
         // Корректировка, чтобы общее количество соответствовало
         let remainder = totalImages - (trainCount + testCount + validCount)
@@ -311,26 +299,26 @@ struct ContentView: View {
         let group = DispatchGroup()
         
         // Обрабатываем папку 'all' со всеми изображениями
+//            group.enter()
+//            processImages(allAnnotatedImages, to: allURL) {
+//                group.leave()
+//            }
+            
+            // Обрабатываем каждую из папок train, test, valid
             group.enter()
-            processImages(allAnnotatedImages, to: allURL) {
+            processImages(trainImages, to: trainURL) {
                 group.leave()
             }
             
-            // Обрабатываем каждую из папок train, test, valid
-//            group.enter()
-//            processImages(trainImages, to: trainURL) {
-//                group.leave()
-//            }
+            group.enter()
+            processImages(testImages, to: testURL) {
+                group.leave()
+            }
             
-//            group.enter()
-//            processImages(testImages, to: testURL) {
-//                group.leave()
-//            }
-            
-//            group.enter()
-//            processImages(validImages, to: validURL) {
-//                group.leave()
-//            }
+            group.enter()
+            processImages(validImages, to: validURL) {
+                group.leave()
+            }
             
             // Ждем завершения всех операций
             group.notify(queue: .main) {

@@ -16,6 +16,7 @@ class ImageThumbnailsViewModel: ObservableObject {
     @Published  var isLoadingThumbnails = false
     @Published  var creationProgress: Double = 0.0
     @Published  var loadingProgress: Double = 0.0
+    var isProjectLaunch: Bool = false
     
     var projectData: ProjectDataViewModel
     init(projectData: ProjectDataViewModel) {
@@ -23,20 +24,30 @@ class ImageThumbnailsViewModel: ObservableObject {
     }
     
     func goToNextImage() {
-        // Реализация перехода к следующему изображению
-        // Например:
-        if let currentIndex = imageURLs.firstIndex(of: projectData.selectedImageURL!) {
+        guard let selectedImageURL = projectData.selectedImageURL else {return}
+        if let currentIndex = imageURLs.firstIndex(of: selectedImageURL) {
             let nextIndex = imageURLs.index(after: currentIndex)
             if nextIndex < imageURLs.endIndex {
                 projectData.selectedImageURL = imageURLs[nextIndex]
             } else {
-                // Если достигли конца, можно вернуться к первому изображению или ничего не делать
-                // projectData.selectedImageURL = imageThumbnailsData.imageURLs.first
+                projectData.selectedImageURL = imageURLs.first
+            }
+        }
+    }    
+    func goToPreviousImage() {
+        guard let selectedImageURL = projectData.selectedImageURL else {return}
+        if let currentIndex = imageURLs.firstIndex(of: selectedImageURL) {
+            let previousIndex = imageURLs.index(before: currentIndex)
+            if previousIndex > imageURLs.startIndex {
+                projectData.selectedImageURL = imageURLs[previousIndex]
+            } else {
+                projectData.selectedImageURL = imageURLs.last
             }
         }
     }
     
-    func loadImagesForSelectedFolder() {
+    func loadImagesForSelectedFolder(firstLaunch: Bool = false) {
+        self.isProjectLaunch = firstLaunch
         guard let projectURL = projectData.projectURL, let selectedFolder = projectData.selectedFolder else {
             print("guard")
             return }
@@ -131,7 +142,8 @@ class ImageThumbnailsViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     self.thumbnailURLs = thumbnailFiles
                     self.isLoadingThumbnails = false
-                    self.projectData.selectedImageURL = self.imageURLs.first
+                    if !self.isProjectLaunch {self.projectData.selectedImageURL = self.imageURLs.first}
+                    self.isProjectLaunch = false
                 }
             } catch {
                 print("Ошибка при загрузке миниатюр: \(error.localizedDescription)")
