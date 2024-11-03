@@ -30,6 +30,12 @@
 		E2868E952CA43FBF0020BAA2 /* AnnotationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2868E942CA43FAE0020BAA2 /* AnnotationViewModel.swift */; };
 		E2868E972CA441AF0020BAA2 /* ProjectDataViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2868E962CA441AF0020BAA2 /* ProjectDataViewModel.swift */; };
 		E2868E992CA487550020BAA2 /* ImageThumbnailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2868E982CA487550020BAA2 /* ImageThumbnailsView.swift */; };
+		E29E407B2CD6320900E52529 /* ExportModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29E407A2CD6320900E52529 /* ExportModalView.swift */; };
+		E29E407D2CD6455000E52529 /* ExportTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29E407C2CD6455000E52529 /* ExportTypes.swift */; };
+		E29E407F2CD684D600E52529 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E29E407E2CD684D600E52529 /* Localizable.xcstrings */; };
+		E29E40812CD6868900E52529 /* Extension+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29E40802CD6867F00E52529 /* Extension+String.swift */; };
+		E29E40832CD68F1A00E52529 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29E40822CD68F1A00E52529 /* LogView.swift */; };
+		E29E40852CD694EE00E52529 /* LogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29E40842CD694EE00E52529 /* LogViewModel.swift */; };
 		E2DEAB772C99CB6B00ABC62C /* ProjectSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DEAB762C99CB6B00ABC62C /* ProjectSettings.swift */; };
 		E2DEAB792C99E48500ABC62C /* ClassData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DEAB782C99E48500ABC62C /* ClassData.swift */; };
 		E2E034562CADE602003D5150 /* ClassMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E034552CADE602003D5150 /* ClassMenuView.swift */; };
@@ -63,6 +69,12 @@
 		E2868E942CA43FAE0020BAA2 /* AnnotationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationViewModel.swift; sourceTree = "<group>"; };
 		E2868E962CA441AF0020BAA2 /* ProjectDataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDataViewModel.swift; sourceTree = "<group>"; };
 		E2868E982CA487550020BAA2 /* ImageThumbnailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageThumbnailsView.swift; sourceTree = "<group>"; };
+		E29E407A2CD6320900E52529 /* ExportModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportModalView.swift; sourceTree = "<group>"; };
+		E29E407C2CD6455000E52529 /* ExportTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportTypes.swift; sourceTree = "<group>"; };
+		E29E407E2CD684D600E52529 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		E29E40802CD6867F00E52529 /* Extension+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+String.swift"; sourceTree = "<group>"; };
+		E29E40822CD68F1A00E52529 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
+		E29E40842CD694EE00E52529 /* LogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogViewModel.swift; sourceTree = "<group>"; };
 		E2DEAB762C99CB6B00ABC62C /* ProjectSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectSettings.swift; sourceTree = "<group>"; };
 		E2DEAB782C99E48500ABC62C /* ClassData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassData.swift; sourceTree = "<group>"; };
 		E2E034552CADE602003D5150 /* ClassMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassMenuView.swift; sourceTree = "<group>"; };
@@ -109,6 +121,7 @@
 				E2105F842C9971180032250E /* Model */,
 				E2105F742C9967A80032250E /* Assets.xcassets */,
 				E2105F792C9967A80032250E /* XAnnotation.entitlements */,
+				E29E407E2CD684D600E52529 /* Localizable.xcstrings */,
 				E2105F762C9967A80032250E /* Preview Content */,
 			);
 			path = XAnnotation;
@@ -125,7 +138,9 @@
 		E2105F7F2C9968060032250E /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
+				E29E40822CD68F1A00E52529 /* LogView.swift */,
 				E2FF1AD82CD4FF7800B158F1 /* ExportSettingsView.swift */,
+				E29E407A2CD6320900E52529 /* ExportModalView.swift */,
 				E2E034552CADE602003D5150 /* ClassMenuView.swift */,
 				E27BC2192CA7184F00154AB3 /* StaticImageView.swift */,
 				E2868E982CA487550020BAA2 /* ImageThumbnailsView.swift */,
@@ -146,6 +161,7 @@
 				E2105F852C99713A0032250E /* Annotation.swift */,
 				E2DEAB762C99CB6B00ABC62C /* ProjectSettings.swift */,
 				E2DEAB782C99E48500ABC62C /* ClassData.swift */,
+				E29E407C2CD6455000E52529 /* ExportTypes.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -153,6 +169,7 @@
 		E2105F8B2C99B83F0032250E /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				E29E40802CD6867F00E52529 /* Extension+String.swift */,
 				E2868E8D2C9DDA960020BAA2 /* Extension+NSImage.swift */,
 				E2105F8E2C99BB410032250E /* Extension+URL.swift */,
 			);
@@ -170,6 +187,7 @@
 		E2868E932CA43F280020BAA2 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				E29E40842CD694EE00E52529 /* LogViewModel.swift */,
 				E2E9717C2CB598D9004D0165 /* ExportViewModel.swift */,
 				E27BC2152CA6E62400154AB3 /* ImageThumbnailsViewModel.swift */,
 				E27BC2132CA6D0D200154AB3 /* ClassDataViewModel.swift */,
@@ -223,6 +241,8 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
+				ru,
 			);
 			mainGroup = E2105F642C9967A70032250E;
 			productRefGroup = E2105F6E2C9967A70032250E /* Products */;
@@ -241,6 +261,7 @@
 			files = (
 				E2105F782C9967A80032250E /* Preview Assets.xcassets in Resources */,
 				E2105F752C9967A80032250E /* Assets.xcassets in Resources */,
+				E29E407F2CD684D600E52529 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,6 +273,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E2DEAB772C99CB6B00ABC62C /* ProjectSettings.swift in Sources */,
+				E29E407B2CD6320900E52529 /* ExportModalView.swift in Sources */,
 				E2868E8E2C9DDA960020BAA2 /* Extension+NSImage.swift in Sources */,
 				E2868E892C9C54120020BAA2 /* CreateMLAnnotation.swift in Sources */,
 				E27BC21E2CA7219000154AB3 /* СrossView.swift in Sources */,
@@ -263,20 +285,24 @@
 				E2868E872C9C34870020BAA2 /* ClassRowView.swift in Sources */,
 				E237FB002CCABD6C00123A39 /* SettingsViewModel.swift in Sources */,
 				E2105F862C99713A0032250E /* Annotation.swift in Sources */,
+				E29E40832CD68F1A00E52529 /* LogView.swift in Sources */,
 				E2E9717D2CB598D9004D0165 /* ExportViewModel.swift in Sources */,
 				E2868E952CA43FBF0020BAA2 /* AnnotationViewModel.swift in Sources */,
 				E2868E852C9C2FF60020BAA2 /* ClassListView.swift in Sources */,
 				E2105F8F2C99BB410032250E /* Extension+URL.swift in Sources */,
 				E2105F832C9970EE0032250E /* AnnotationView.swift in Sources */,
+				E29E40852CD694EE00E52529 /* LogViewModel.swift in Sources */,
 				E27BC2142CA6D0D200154AB3 /* ClassDataViewModel.swift in Sources */,
 				E2E034562CADE602003D5150 /* ClassMenuView.swift in Sources */,
 				E2105F712C9967A70032250E /* XAnnotationApp.swift in Sources */,
 				E27BC21C2CA7210200154AB3 /* СrossViewModel.swift in Sources */,
 				E237FAFE2CCAB98F00123A39 /* MenuCommands.swift in Sources */,
+				E29E407D2CD6455000E52529 /* ExportTypes.swift in Sources */,
 				E27BC2162CA6E62400154AB3 /* ImageThumbnailsViewModel.swift in Sources */,
 				E2FF1AD92CD4FF7800B158F1 /* ExportSettingsView.swift in Sources */,
 				E2105F812C99684C0032250E /* AsyncImageView.swift in Sources */,
 				E2DEAB792C99E48500ABC62C /* ClassData.swift in Sources */,
+				E29E40812CD6868900E52529 /* Extension+String.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -343,6 +369,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -400,6 +427,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
 			name = Release;
 		};

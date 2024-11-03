@@ -13,3 +13,4 @@ struct ProjectSettings: Codable {
     var allowImageRotation: Bool = false
     var selectedImageURL: String?
 }
+

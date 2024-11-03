@@ -10,9 +10,7 @@ struct ImageThumbnailsView: View {
     
     @EnvironmentObject var annotationsData: AnnotationViewModel
     @EnvironmentObject var projectData: ProjectDataViewModel
-//    @EnvironmentObject var classData: ClassDataViewModel
     @EnvironmentObject var imageThumbnailsData: ImageThumbnailsViewModel
-//    @EnvironmentObject var exportViewModel: ExportViewModel
     
     var body: some View {
         

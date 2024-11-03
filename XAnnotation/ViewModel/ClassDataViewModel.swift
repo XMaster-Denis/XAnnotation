@@ -10,11 +10,8 @@ class ClassDataViewModel: ObservableObject {
     @Published var classList: [ClassData] = []
     @Published var selectedClass: ClassData?
     
-    var projectData: ProjectDataViewModel
+    var projectData: ProjectDataViewModel = .init()
     
-    init(projectData: ProjectDataViewModel) {
-        self.projectData = projectData
-    }
     
     func loadClassListFromFile() {
         do {
@@ -23,15 +20,14 @@ class ClassDataViewModel: ObservableObject {
                 let jsonData = try Data(contentsOf: classesFileURL)
                 let decoder = JSONDecoder()
                 classList = try decoder.decode([ClassData].self, from: jsonData)
-                print("Список классов загружен из файла.")
                 
-                // Устанавливаем выбранный класс, если он не установлен
+                // Install the selected class if it is not installed
                 if selectedClass == nil, let firstClass = classList.first {
                     selectedClass = firstClass
                 }
             }
         } catch {
-            print("Ошибка при загрузке списка классов: \(error.localizedDescription)")
+            printLog("Error loading class list: \(error.localizedDescription)")
         }
     }
 }

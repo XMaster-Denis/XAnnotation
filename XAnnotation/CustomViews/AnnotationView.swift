@@ -100,7 +100,7 @@ struct AnnotationView: View {
                                             annotationsData.addAnnotation(imageScale: imageScale, imageSize: imageSize, currentRect: currentRect, selectedClass: selectedClass)
                                         }
                                     } else {
-                                        print("Аннотация слишком маленькая и не будет сохранена.")
+                                        printLog("Аннотация слишком маленькая и не будет сохранена.")
                                     }
                                     
                                     currentRect = .zero

@@ -9,18 +9,20 @@ import SwiftUI
 
 @main
 struct XAnnotationApp: App {
-
-    @StateObject var projectData: ProjectDataViewModel = ProjectDataViewModel.init()
-    @StateObject var exportViewModel: ExportViewModel = ExportViewModel.init()
+    
+    @StateObject var projectData: ProjectDataViewModel = .init()
     @StateObject var settings: Settings = Settings.shared
     @StateObject var krestViewModel: СrossViewModel = СrossViewModel.shared
-    @StateObject var classData: ClassDataViewModel = ClassDataViewModel.init(projectData: ProjectDataViewModel())
-    @StateObject var annotationsData: AnnotationViewModel = AnnotationViewModel.init(projectData: ProjectDataViewModel())
-    @StateObject var imageThumbnailsData: ImageThumbnailsViewModel = ImageThumbnailsViewModel.init(projectData: ProjectDataViewModel())
+    @StateObject var classData: ClassDataViewModel = .init()
+    @StateObject var annotationsData: AnnotationViewModel = .init()
+    @StateObject var imageThumbnailsData: ImageThumbnailsViewModel = .init()
+    @StateObject var exportViewModel: ExportViewModel = .init()
+   // @StateObject var logViewModel: LogViewModel = .init()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(\.locale, Locale(identifier: "ru"))
                 .environmentObject(settings)
                 .environmentObject(exportViewModel)
                 .environmentObject(annotationsData)
@@ -28,10 +30,13 @@ struct XAnnotationApp: App {
                 .environmentObject(projectData)
                 .environmentObject(classData)
                 .environmentObject(imageThumbnailsData)
+                //.environmentObject(logViewModel)
                 .onAppear {
-                        annotationsData.projectData = projectData
-                        classData.projectData = projectData
-                        imageThumbnailsData.projectData = projectData
+                    annotationsData.projectData = projectData
+                    classData.projectData = projectData
+                    imageThumbnailsData.projectData = projectData
+                    exportViewModel.projectData = projectData
+                    exportViewModel.annotationsData = annotationsData
                 }
             
         }

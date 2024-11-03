@@ -69,11 +69,8 @@ struct ExportSettingsView: View {
         .padding()
     }
     
-    enum PercentageType {
-        case train, test, valid
-    }
     
-    private func adjustNextValue(for adjustedType: PercentageType) {
+    private func adjustNextValue(for adjustedType: ExportFolderType) {
         // Round the adjusted percentage to the nearest multiple of 5
         var adjustedPercentage = round(percentage(for: adjustedType) / 5) * 5
         setPercentage(for: adjustedType, value: adjustedPercentage)
@@ -83,7 +80,7 @@ struct ExportSettingsView: View {
         var difference = 100 - total
 
         // Define the order of adjustment based on the adjusted slider
-        let adjustmentOrder: [PercentageType]
+        let adjustmentOrder: [ExportFolderType]
         switch adjustedType {
         case .train:
             adjustmentOrder = [.test, .valid]
@@ -117,7 +114,7 @@ struct ExportSettingsView: View {
     }
         
     // Helper functions
-    private func percentage(for type: PercentageType) -> Double {
+    private func percentage(for type: ExportFolderType) -> Double {
         switch type {
         case .train:
             return settings.exportProportions.trainPercentage
@@ -128,7 +125,7 @@ struct ExportSettingsView: View {
         }
     }
 
-    private func setPercentage(for type: PercentageType, value: Double) {
+    private func setPercentage(for type: ExportFolderType, value: Double) {
         let roundedValue = (value / 5).rounded() * 5
         switch type {
         case .train:

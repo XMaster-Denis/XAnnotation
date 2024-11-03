@@ -18,10 +18,8 @@ class ImageThumbnailsViewModel: ObservableObject {
     @Published  var loadingProgress: Double = 0.0
     var isProjectLaunch: Bool = false
     
-    var projectData: ProjectDataViewModel
-    init(projectData: ProjectDataViewModel) {
-        self.projectData = projectData
-    }
+    var projectData: ProjectDataViewModel = .init()
+
     
     func goToNextImage() {
         guard let selectedImageURL = projectData.selectedImageURL else {return}
@@ -70,7 +68,7 @@ class ImageThumbnailsViewModel: ObservableObject {
                 
                 
             } catch {
-                print("Error adding folder with images: \(error.localizedDescription)")
+                printLog("Error adding folder with images: \(error.localizedDescription)")
             }
         }
     }
@@ -78,7 +76,7 @@ class ImageThumbnailsViewModel: ObservableObject {
     func loadImagesForSelectedFolder(firstLaunch: Bool = false) {
         self.isProjectLaunch = firstLaunch
         guard let projectURL = projectData.projectURL, let selectedFolder = projectData.selectedFolder else {
-            print("guard")
+            printLog("guard")
             return }
         let folderURL = projectURL.appendingPathComponent("images").appendingPathComponent(selectedFolder)
         loadImages(from: folderURL)
@@ -102,7 +100,7 @@ class ImageThumbnailsViewModel: ObservableObject {
                         urls.append(fileURL)
                     }
                 } catch {
-                    print("Ошибка при получении свойств файла: \(error.localizedDescription)")
+                    printLog("Ошибка при получении свойств файла: \(error.localizedDescription)")
                 }
             }
             
@@ -127,7 +125,7 @@ class ImageThumbnailsViewModel: ObservableObject {
                 do {
                     try fileManager.createDirectory(at: thumbnailFolderURL, withIntermediateDirectories: true, attributes: nil)
                 } catch {
-                    print("Ошибка при создании папки для миниатюр: \(error.localizedDescription)")
+                    printLog("Ошибка при создании папки для миниатюр: \(error.localizedDescription)")
                 }
             }
             
@@ -175,7 +173,7 @@ class ImageThumbnailsViewModel: ObservableObject {
                     self.isProjectLaunch = false
                 }
             } catch {
-                print("Ошибка при загрузке миниатюр: \(error.localizedDescription)")
+                printLog("Ошибка при загрузке миниатюр: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     self.isLoadingThumbnails = false
                 }

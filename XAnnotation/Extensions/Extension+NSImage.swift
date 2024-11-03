@@ -24,7 +24,7 @@ extension NSImage {
         do {
             try data.write(to: url)
         } catch {
-            print("Ошибка при сохранении изображения: \(error.localizedDescription)")
+            printLog("Ошибка при сохранении изображения: \(error.localizedDescription)")
         }
     }
     

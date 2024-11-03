@@ -19,6 +19,7 @@ class Settings: ObservableObject {
         case ru = "Русский"
         
         var id: String { self.rawValue }
+        var code: String {"\(self)"}
     }
     
     struct ExportProportions: Codable {
@@ -27,46 +28,12 @@ class Settings: ObservableObject {
         var validPercentage: Double = 15
     }
     
-    @Published var exportProportions: ExportProportions = .init() {
-        didSet{
-//            let encoder = JSONEncoder()
-//            guard let data = try? encoder.encode(exportProportions) else { return }
-//            UserDefaults.standard.set(data, forKey: "ExportProportions")
-            
-            
-//            var path: [AnyObject] = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true) as [AnyObject]
-//                let folder: String = path[0] as! String
-//                NSLog("Your NSUserDefaults are stored in this folder: %@/Preferences", folder)
-//            UserDefaults.standard.set(exportProportions.trainPercentage, forKey: "TrainPercentage")
-//            UserDefaults.standard.set(exportProportions.testPercentage, forKey: "TestPercentage")
-//            UserDefaults.standard.set(exportProportions.validPercentage, forKey: "ValidPercentage")
-        }
-    }
+    @Published var exportProportions: ExportProportions = .init()
     
     @Published var language: Language = .en {
-        didSet { UserDefaults.standard.set(language.rawValue, forKey: "SelectedLanguage") }
+        didSet { UserDefaults.standard.set(language.rawValue, forKey: "SelectedLanguage")}
+        
     }
-    //
-    //    @Published var trainPercentage: Double = 70 {
-    //        didSet { UserDefaults.standard.set(trainPercentage, forKey: "TrainPercentage") }
-    //    }
-    //
-    //    @Published var testPercentage: Double = 15 {
-    //        didSet { UserDefaults.standard.set(testPercentage, forKey: "TestPercentage") }
-    //    }
-    //
-    //    @Published var validPercentage: Double = 15 {
-    //        didSet { UserDefaults.standard.set(validPercentage, forKey: "ValidPercentage") }
-    //    }
-    //    do {
-    //        let encoder = JSONEncoder()
-    //        encoder.outputFormatting = .prettyPrinted
-    //        let data = try encoder.encode(annotations)
-    //        try data.write(to: annotationsURL)
-    //        print("Аннотации успешно сохранены по адресу: \(annotationsURL.path)")
-    //    } catch {
-    //        print("Ошибка при сохранении аннотаций: \(error.localizedDescription)")
-    //    }
     
     
     private init() {
@@ -84,7 +51,7 @@ class Settings: ObservableObject {
             do {
                 exportProportions = try decoder.decode(ExportProportions.self, from: savedProportions)
             } catch {
-                print("Error in UserDefaults: \(error.localizedDescription)")
+                printLog("Error in UserDefaults: \(error.localizedDescription)")
             }
         }
         

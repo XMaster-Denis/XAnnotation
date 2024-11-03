@@ -8,61 +8,53 @@
 import SwiftUI
 
 struct ClassListView: View {
-
+    
     @EnvironmentObject var projectData: ProjectDataViewModel
     @EnvironmentObject var classData: ClassDataViewModel
-
     @EnvironmentObject var annotationsData: AnnotationViewModel
     
     @State private var newClassName: String = ""
     //@State private var selectedClass: ClassData?
     
     var body: some View {
-        VStack(alignment: .leading) {
-            Text("Список классов:")
-                .font(.headline)
-            
-            List(selection: $classData.selectedClass) {
-                ForEach($classData.classList) { $classData in
-                    ClassRowView(
-                        currentClassData: $classData,
-                        saveClassListToFile: saveClassListToFile
-                    )
-                    .tag(classData)
-                }
-                .onDelete(perform: deleteClassAt)
+        
+        Text("Список классов:")
+            .font(.headline)
+        
+        List(selection: $classData.selectedClass) {
+            ForEach($classData.classList) { $classData in
+                ClassRowView(
+                    currentClassData: $classData,
+                    saveClassListToFile: saveClassListToFile
+                )
+                .tag(classData)
             }
-//            .onChange(of: selectedClass) { oldValue, newValue in
-//                classData.selectedClass = newValue
-//            }
-            
-            VStack {
-                TextField("Добавить класс", text: $newClassName)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                Button(action: addClass) {
-                    Text("Добавить")
-                }
-                .disabled(newClassName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                Button("Add 2 classes") {
-                    newClassName = "Red"
-                    addClass()
-                    newClassName = "Blue"
-                    addClass()
-                    newClassName = ""
-                }
+            .onDelete(perform: deleteClassAt)
+        }
+        //            .onChange(of: selectedClass) { oldValue, newValue in
+        //                classData.selectedClass = newValue
+        //            }
+        
+        VStack {
+            TextField("Class name", text: $newClassName)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+            Button(action: addClass) {
+                Text("Add class")
             }
-            .padding()
-            
-            if classData.selectedClass == nil {
-                Text("Пожалуйста, выберите класс для аннотирования.")
-                    .foregroundColor(.red)
-            } else {
-                Text("Текущий выбранный класс: \(classData.selectedClass!.name)")
-                    .foregroundColor(.green)
-            }
+            .disabled(newClassName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
         .padding()
-        .frame(width: 250)
+        
+        Spacer()
+        
+        if classData.selectedClass == nil {
+            Text("Пожалуйста, выберите класс для аннотирования.")
+                .foregroundColor(.red)
+        } else {
+            Text("Текущий выбранный класс: \(classData.selectedClass!.name)")
+                .foregroundColor(.green)
+        }
+        
     }
     
     // MARK: - Функции
@@ -99,10 +91,10 @@ struct ClassListView: View {
             if let projectURL = projectData.projectURL {
                 let classesFileURL = projectURL.appendingPathComponent("classes.json")
                 try jsonData.write(to: classesFileURL)
-                print("Список классов сохранен по пути: \(classesFileURL.path)")
+                printLog("Список классов сохранен по пути: \(classesFileURL.path)")
             }
         } catch {
-            print("Ошибка при сохранении списка классов: \(error.localizedDescription)")
+            printLog("Ошибка при сохранении списка классов: \(error.localizedDescription)")
         }
     }
     

@@ -1,0 +1,152 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%lld" : {
+
+    },
+    "%lld%% " : {
+
+    },
+    "%lld%% completed" : {
+
+    },
+    "Add class" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Change class" : {
+
+    },
+    "Class name" : {
+
+    },
+    "Create a new project" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erstellen Sie ein neues Projekt"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Создать новый проект"
+          }
+        }
+      }
+    },
+    "Creating thumbnails..." : {
+
+    },
+    "Delete annotation" : {
+
+    },
+    "Export for CreateML" : {
+
+    },
+    "Export Image Settings" : {
+
+    },
+    "Export proportions" : {
+
+    },
+    "Export settings" : {
+
+    },
+    "Language" : {
+
+    },
+    "Loading thumbnails..." : {
+
+    },
+    "Navigation" : {
+
+    },
+    "Next Image" : {
+
+    },
+    "OK" : {
+
+    },
+    "Open project" : {
+
+    },
+    "Previous image" : {
+
+    },
+    "Project not selected" : {
+
+    },
+    "Remove annotations from image" : {
+
+    },
+    "Rotate images" : {
+
+    },
+    "Rotate output images" : {
+
+    },
+    "Save" : {
+
+    },
+    "Select an image to annotate" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Test:" : {
+
+    },
+    "Total: %lld%%" : {
+
+    },
+    "Train:" : {
+
+    },
+    "Validation:" : {
+
+    },
+    "Выберите цвет" : {
+
+    },
+    "Добавить папку с изображениями" : {
+
+    },
+    "Закрыть" : {
+
+    },
+    "Не удалось загрузить изображение" : {
+
+    },
+    "Новое имя класса" : {
+
+    },
+    "Ошибка" : {
+
+    },
+    "Пожалуйста, выберите класс для аннотирования." : {
+
+    },
+    "Редактировать имя" : {
+
+    },
+    "Сохранить изменения" : {
+
+    },
+    "Список классов:" : {
+
+    },
+    "Текущий выбранный класс: %@" : {
+
+    },
+    "Удалить" : {
+
+    }
+  },
+  "version" : "1.0"
+}

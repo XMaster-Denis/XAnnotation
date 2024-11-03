@@ -15,12 +15,10 @@ class СrossViewModel: ObservableObject {
     
     func updateCrossData(_ newValue: CGPoint) {
         hoverLocation = newValue
-        // Дополнительная логика сохранения или обновления
     }
     
     func updateCrossStatus(_ newValue: Bool) {
         isHovering = newValue
-        // Дополнительная логика сохранения или обновления
     }
 }
 

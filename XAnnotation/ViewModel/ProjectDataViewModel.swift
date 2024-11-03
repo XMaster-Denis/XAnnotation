@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 class ProjectDataViewModel: ObservableObject {
     @Published var projectSettings: ProjectSettings?
@@ -15,8 +16,16 @@ class ProjectDataViewModel: ObservableObject {
     @Published var selectedImageURL: URL?
     @Published var projectURL: URL?
     
-
+    private var cancellables: Set<AnyCancellable> = []
     
+    init(){
+        $allowImageRotation
+            .receive(on: DispatchQueue.main) // Required to perform saving only after changing the value
+            .sink { _ in
+                self.saveProjectSettings()
+            }
+            .store(in: &cancellables)
+    }
     
     func createNewProject() {
         let savePanel = NSSavePanel()
@@ -41,7 +50,7 @@ class ProjectDataViewModel: ObservableObject {
                 saveProjectSettings()
 
             } catch {
-                print("Ошибка при создании структуры проекта: \(error.localizedDescription)")
+                printLog("Ошибка при создании структуры проекта: \(error.localizedDescription)")
             }
         }
     }
@@ -57,16 +66,17 @@ class ProjectDataViewModel: ObservableObject {
             selectedImageURL: selectedImageURL?.lastPathComponent ?? "")
         do {
             let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
             let data = try encoder.encode(projectSettings)
             try data.write(to: settingsURL)
         } catch {
-            print("Ошибка при сохранении настроек проекта: \(error.localizedDescription)")
+            printLog("Ошибка при сохранении настроек проекта: \(error.localizedDescription)")
         }
     }
 
     func loadProjectSettings() {
         guard let projectURL = projectURL else {
-            print("Проект не выбран.")
+            printLog("Проект не выбран.")
             return
         }
         
@@ -86,21 +96,22 @@ class ProjectDataViewModel: ObservableObject {
                     .appendingPathComponent(selectedFolder)
                     .appendingPathComponent(selectedImageURL)
             }
+            printLog("Проект '" + projectURL.lastPathComponent + "' загружен")
         } catch let decodingError as DecodingError {
             switch decodingError {
             case .typeMismatch(let type, let context):
-                print("Type Mismatch: \(type), context: \(context)")
+                printLog("Type Mismatch: \(type), context: \(context)")
             case .valueNotFound(let type, let context):
-                print("Value not found: \(type), context: \(context)")
+                printLog("Value not found: \(type), context: \(context)")
             case .keyNotFound(let key, let context):
-                print("Key '\(key)' not found: \(context.debugDescription)")
+                printLog("Key '\(key)' not found: \(context.debugDescription)")
             case .dataCorrupted(let context):
-                print("Data corrupted: \(context.debugDescription)")
+                printLog("Data corrupted: \(context.debugDescription)")
             @unknown default:
-                print("Unknown decoding error: \(decodingError.localizedDescription)")
+                printLog("Unknown decoding error: \(decodingError.localizedDescription)")
             }
         } catch {
-            print("Ошибка при загрузке настроек проекта: \(error.localizedDescription)")
+            printLog("Ошибка при загрузке настроек проекта: \(error.localizedDescription)")
         }
     }
 }
