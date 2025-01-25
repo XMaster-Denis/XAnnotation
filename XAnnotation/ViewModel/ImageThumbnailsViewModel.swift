@@ -100,7 +100,7 @@ class ImageThumbnailsViewModel: ObservableObject {
                         urls.append(fileURL)
                     }
                 } catch {
-                    printLog("Ошибка при получении свойств файла: \(error.localizedDescription)")
+                    printLog("Error getting file properties: \(error.localizedDescription)")
                 }
             }
             
@@ -125,7 +125,7 @@ class ImageThumbnailsViewModel: ObservableObject {
                 do {
                     try fileManager.createDirectory(at: thumbnailFolderURL, withIntermediateDirectories: true, attributes: nil)
                 } catch {
-                    printLog("Ошибка при создании папки для миниатюр: \(error.localizedDescription)")
+                    printLog("Error creating folder for thumbnails: \(error.localizedDescription)")
                 }
             }
             
@@ -173,7 +173,7 @@ class ImageThumbnailsViewModel: ObservableObject {
                     self.isProjectLaunch = false
                 }
             } catch {
-                printLog("Ошибка при загрузке миниатюр: \(error.localizedDescription)")
+                printLog("Error loading thumbnails: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     self.isLoadingThumbnails = false
                 }

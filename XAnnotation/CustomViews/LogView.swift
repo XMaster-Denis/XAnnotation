@@ -15,7 +15,11 @@ struct LogView: View {
             ScrollView {
                 VStack(alignment: .leading) {
                     ForEach(Array(logModel.logs.enumerated()), id: \.offset) { index, log in
-                        Text(log)
+                        Text(String(format: NSLocalizedString(log, comment: "")))
+                        
+                     //   Text("\(viewModel.tomatoesCount, specifier: "%lld") ",
+                         //   comment: "TODO item with number")
+
                             .id(index) // Задаем идентификатор для каждой строки
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }

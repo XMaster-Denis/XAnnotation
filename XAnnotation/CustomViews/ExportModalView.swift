@@ -12,7 +12,7 @@ struct ExportModalView: View {
     
     var body: some View {
         VStack {
-            Text("Export Image Settings")
+            Text("Export proportion settings")
                 .font(.title)
                 .padding()
             

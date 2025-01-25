@@ -9,6 +9,7 @@ import SwiftUI
 
 @main
 struct XAnnotationApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     @StateObject var projectData: ProjectDataViewModel = .init()
     @StateObject var settings: Settings = Settings.shared
@@ -17,12 +18,12 @@ struct XAnnotationApp: App {
     @StateObject var annotationsData: AnnotationViewModel = .init()
     @StateObject var imageThumbnailsData: ImageThumbnailsViewModel = .init()
     @StateObject var exportViewModel: ExportViewModel = .init()
-   // @StateObject var logViewModel: LogViewModel = .init()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environment(\.locale, Locale(identifier: "ru"))
+                .environment(\.locale, Locale(identifier: settings.language.code))
+
                 .environmentObject(settings)
                 .environmentObject(exportViewModel)
                 .environmentObject(annotationsData)
@@ -44,6 +45,12 @@ struct XAnnotationApp: App {
         .commands {
             MenuCommands(imageThumbnailsData: imageThumbnailsData,
                          projectData: projectData)
+        }
+    }
+    
+    class AppDelegate: NSObject, NSApplicationDelegate {
+        func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+            return true
         }
     }
 }

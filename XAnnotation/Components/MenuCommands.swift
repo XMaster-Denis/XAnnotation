@@ -12,31 +12,35 @@ struct MenuCommands: Commands {
     @ObservedObject var imageThumbnailsData: ImageThumbnailsViewModel
     @ObservedObject var projectData: ProjectDataViewModel
     
+
+    
     var body: some Commands {
-        CommandMenu("Settings") {
-            Menu("Export settings"){
-                Toggle("Rotate output images", isOn: $projectData.allowImageRotation)
+
+        CommandMenu("Settings".localized) {
+            Menu("Export settings".localized){ // "Export settings"
+                Toggle("Rotate output images".localized, isOn: $projectData.allowImageRotation)
                 Divider()
-                Button("Export proportions") {
+                Button("Export proportions".localized) {
                     settings.showExportSettingsView = true
                 }
             }
             
-            Picker(selection: $settings.language, label: Text("Language")) {
+            Picker(selection: $settings.language, label: Text("Language".localized)) {
                 ForEach(Settings.Language.allCases) {language in
                     Text(language.rawValue).tag(language)
                 }
             }
         }
         
-        CommandMenu("Navigation") {
-            Button("Previous image") {
+        CommandMenu("Navigation".localized) {
+            Button("Previous image".localized) {
                 imageThumbnailsData.goToPreviousImage()
             }
             .disabled(projectData.selectedImageURL == nil)
             .keyboardShortcut("q", modifiers: .option)
-            Button("Next Image") {
+            Button("Next Image".localized) {
                 imageThumbnailsData.goToNextImage()
+                
             }
             .keyboardShortcut("w", modifiers: .option)
             .disabled(projectData.selectedImageURL == nil)

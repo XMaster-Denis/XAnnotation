@@ -38,7 +38,7 @@ struct ImageThumbnailsView: View {
             
             // Кнопка для добавления новой папки
             Button(action: imageThumbnailsData.addImageFolder) {
-                Text("Добавить папку с изображениями")
+                Text("Add folder with images")
             }
             
             // Отображение миниатюр изображений

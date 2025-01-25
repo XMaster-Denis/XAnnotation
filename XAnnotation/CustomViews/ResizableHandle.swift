@@ -52,14 +52,3 @@ struct ResizableHandle: View {
     }
 }
 
-//struct ResizableHandle_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ResizableHandle(
-//            position: .topLeft,
-//            currentRect: CGRect(x: 50, y: 50, width: 100, height: 100),
-//            imageOrigin: CGPoint(x: 0, y: 0),
-//            saveAnnotations: {},
-//            onDrag: { _ in }
-//        )
-//    }
-//}

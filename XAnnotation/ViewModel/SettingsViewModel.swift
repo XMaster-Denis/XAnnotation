@@ -31,8 +31,31 @@ class Settings: ObservableObject {
     @Published var exportProportions: ExportProportions = .init()
     
     @Published var language: Language = .en {
-        didSet { UserDefaults.standard.set(language.rawValue, forKey: "SelectedLanguage")}
+        didSet {
+            UserDefaults.standard.set(language.rawValue, forKey: "SelectedLanguage")
+            setAppLanguage(to: self.language.code)
+        }
         
+    }
+    
+    private var bundle: Bundle = .main
+    
+    func setAppLanguage(to languageCode: String) {
+        UserDefaults.standard.set([languageCode], forKey: "AppleLanguages")
+        UserDefaults.standard.synchronize()
+    }
+    
+    
+    func setLanguage(_ languageCode: String) {
+        guard let path = Bundle.main.path(forResource: languageCode, ofType: "lproj"),
+              let languageBundle = Bundle(path: path) else {
+            print("Error: Could not find language pack for \(languageCode)")
+            return
+        }
+
+        bundle = languageBundle
+      
+        objectWillChange.send()
     }
     
     
@@ -57,6 +80,8 @@ class Settings: ObservableObject {
         
         
     }
+    
+
     
     func saveProportions() {
         let encoder = JSONEncoder()

@@ -41,6 +41,7 @@ struct ContentView: View {
                 }
             }
             .padding()
+  
             
             if !annotationsData.annotations.isEmpty {
                 Button("Remove annotations from image") {
@@ -49,31 +50,30 @@ struct ContentView: View {
                 .padding()
             }
             
-            // Новая кнопка для экспорта
             Button("Export for CreateML") {
                 exportViewModel.startExport()
             }
             .padding()
-            Toggle("Rotate images", isOn: $projectData.allowImageRotation)
+            Toggle("Rotate output images", isOn: $projectData.allowImageRotation)
         }
     }
     
     var body: some View {
         
         VStack {
-            // Верхние кнопки
+            // Top buttons
             buttonView
             
-            // Основной контент
+            // Main content
             if imageThumbnailsData.isCreatingThumbnails {
-                // Отображение индикатора прогресса при создании миниатюр
+                // Display a progress indicator while creating thumbnails
                 VStack {
                     ProgressView("Creating thumbnails...", value: imageThumbnailsData.creationProgress, total: 1.0)
                         .padding()
                     Text("\(Int(imageThumbnailsData.creationProgress * 100))% completed")
                 }
             } else if imageThumbnailsData.isLoadingThumbnails {
-                // Отображение индикатора прогресса при загрузке миниатюр
+                // Show progress indicator while loading thumbnails
                 VStack {
                     ProgressView("Loading thumbnails...", value: imageThumbnailsData.loadingProgress, total: 1.0)
                         .padding()

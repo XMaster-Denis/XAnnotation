@@ -33,7 +33,7 @@ struct StaticImageView: View {
                     
                     
                 } else {
-                    Text("Не удалось загрузить изображение")
+                    Text("Failed to upload image")
                         .foregroundColor(.red)
                 }
             }

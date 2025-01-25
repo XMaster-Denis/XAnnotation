@@ -29,14 +29,14 @@ class ProjectDataViewModel: ObservableObject {
     
     func createNewProject() {
         let savePanel = NSSavePanel()
-        savePanel.title = "Выберите папку для сохранения проекта"
+        savePanel.title = "Select a folder to save the project"
         savePanel.canCreateDirectories = true
-        savePanel.nameFieldStringValue = "Новый проект"
+        savePanel.nameFieldStringValue = "New Project"
 
         if savePanel.runModal() == .OK, let projectFolderURL = savePanel.url {
             self.projectURL = projectFolderURL
 
-            // Создаем структуру папок внутри проекта
+            // Create a folder structure inside the project
             do {
                 let imagesFolderURL = projectFolderURL.appendingPathComponent("images")
                 let settingsFolderURL = projectFolderURL.appendingPathComponent("settings")
@@ -46,11 +46,11 @@ class ProjectDataViewModel: ObservableObject {
 
                 self.foldersInProject = []
 
-                // Сохраняем настройки проекта (если необходимо)
+                // Save project settings (if necessary)
                 saveProjectSettings()
 
             } catch {
-                printLog("Ошибка при создании структуры проекта: \(error.localizedDescription)")
+                printLog("Error creating project structure: \(error.localizedDescription)")
             }
         }
     }
@@ -70,13 +70,13 @@ class ProjectDataViewModel: ObservableObject {
             let data = try encoder.encode(projectSettings)
             try data.write(to: settingsURL)
         } catch {
-            printLog("Ошибка при сохранении настроек проекта: \(error.localizedDescription)")
+            printLog("Error saving project settings: \(error.localizedDescription)")
         }
     }
 
     func loadProjectSettings() {
         guard let projectURL = projectURL else {
-            printLog("Проект не выбран.")
+            printLog("Project not selected")
             return
         }
         
@@ -96,7 +96,8 @@ class ProjectDataViewModel: ObservableObject {
                     .appendingPathComponent(selectedFolder)
                     .appendingPathComponent(selectedImageURL)
             }
-            printLog("Проект '" + projectURL.lastPathComponent + "' загружен")
+            printLog("Project ‘%@‘ loaded", data: projectURL.lastPathComponent)
+//            printLog("Project '\(projectURL.lastPathComponent)' loaded")
         } catch let decodingError as DecodingError {
             switch decodingError {
             case .typeMismatch(let type, let context):
@@ -111,7 +112,7 @@ class ProjectDataViewModel: ObservableObject {
                 printLog("Unknown decoding error: \(decodingError.localizedDescription)")
             }
         } catch {
-            printLog("Ошибка при загрузке настроек проекта: \(error.localizedDescription)")
+            printLog("Error loading project settings: \(error.localizedDescription)")
         }
     }
 }

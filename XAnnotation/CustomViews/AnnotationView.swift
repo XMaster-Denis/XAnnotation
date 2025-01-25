@@ -100,7 +100,7 @@ struct AnnotationView: View {
                                             annotationsData.addAnnotation(imageScale: imageScale, imageSize: imageSize, currentRect: currentRect, selectedClass: selectedClass)
                                         }
                                     } else {
-                                        printLog("Аннотация слишком маленькая и не будет сохранена.")
+                                        printLog("The annotation is too small and will not be saved.")
                                     }
                                     
                                     currentRect = .zero
@@ -220,7 +220,7 @@ struct AnnotationView: View {
                     
                     
                 } else {
-                    Text("Не удалось загрузить изображение")
+                    Text("Failed to upload image")
                         .foregroundColor(.red)
                         .frame(width: containerSize.width, height: containerSize.height)
                 }
@@ -233,21 +233,3 @@ struct AnnotationView: View {
     
     
 }
-
-
-
-
-
-//struct AnnotationView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        AnnotationView(
-//            imageURL: URL(string: "path/to/image.jpg")!,
-//            annotations: .constant([]),
-//            classList: .constant([]),
-//            selectedClass: .constant(nil),
-//            projectURL: .constant(nil),
-//            saveAnnotations: {}
-//        )
-//    }
-//}
-

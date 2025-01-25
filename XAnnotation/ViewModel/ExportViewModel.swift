@@ -137,7 +137,7 @@ class ExportViewModel: ObservableObject {
             // Открываем папку 'Training data' в Finder на главном потоке
             self.isExporting = false
             NSWorkspace.shared.open(trainingDataURL)
-            printLog("Экспорт в CreateML завершён.")
+            printLog("Export to CreateML complete.")
         }
     }
     
@@ -170,7 +170,7 @@ class ExportViewModel: ObservableObject {
                     
                     // Загружаем исходное изображение
                     guard let image = NSImage(contentsOf: sourceImageURL) else {
-                        printLog("Не удалось загрузить изображение \(originalImagePath)")
+                        printLog("Failed to load image \(originalImagePath)")
                         return
                     }
                     
@@ -180,7 +180,7 @@ class ExportViewModel: ObservableObject {
                     
                     
                     guard let rotatedImage = self.rotateImage(image: image, byDegrees: CGFloat(rotationAngle)) else {
-                        printLog("Не удалось повернуть изображение \(originalImagePath)")
+                        printLog("Failed to rotate image \(originalImagePath)")
                         return
                     }
                     
@@ -192,11 +192,11 @@ class ExportViewModel: ObservableObject {
                             try data.write(to: destinationImageURL)
                             // printLog("Изображение \(originalImagePath) повернуто на \(rotationAngle)° и сохранено как \(newImageName)")
                         } else {
-                            printLog("Ошибка при сохранении изображения \(newImageName)")
+                            printLog("Error saving image \(newImageName)")
                             return
                         }
                     } catch {
-                        printLog("Ошибка при сохранении изображения \(newImageName): \(error.localizedDescription)")
+                        printLog("Error saving image \(newImageName): \(error.localizedDescription)")
                         return
                     }
                     
@@ -278,9 +278,9 @@ class ExportViewModel: ObservableObject {
                 encoder.outputFormatting = .prettyPrinted
                 let data = try encoder.encode(jsonAnnotations)
                 try data.write(to: jsonURL)
-                printLog("Файл createml.json создан в папке \(folderURL.lastPathComponent).")
+                printLog("File createml.json created in folder \(folderURL.lastPathComponent).")
             } catch {
-                printLog("Ошибка при создании createml.json в папке \(folderURL.lastPathComponent): \(error.localizedDescription)")
+                printLog("Error creating createml.json in folder \(folderURL.lastPathComponent): \(error.localizedDescription)")
             }
             // Вызываем completion на главном потоке
             DispatchQueue.main.async {

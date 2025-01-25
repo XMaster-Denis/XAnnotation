@@ -18,7 +18,7 @@ struct ClassListView: View {
     
     var body: some View {
         
-        Text("Список классов:")
+        Text("List of classes:")
             .font(.headline)
         
         List(selection: $classData.selectedClass) {
@@ -48,10 +48,10 @@ struct ClassListView: View {
         Spacer()
         
         if classData.selectedClass == nil {
-            Text("Пожалуйста, выберите класс для аннотирования.")
+            Text("Please select a class to annotate.")
                 .foregroundColor(.red)
         } else {
-            Text("Текущий выбранный класс: \(classData.selectedClass!.name)")
+            Text("Currently selected class: \(classData.selectedClass!.name)")
                 .foregroundColor(.green)
         }
         
@@ -91,10 +91,10 @@ struct ClassListView: View {
             if let projectURL = projectData.projectURL {
                 let classesFileURL = projectURL.appendingPathComponent("classes.json")
                 try jsonData.write(to: classesFileURL)
-                printLog("Список классов сохранен по пути: \(classesFileURL.path)")
+                printLog("Class list saved at: \(classesFileURL.path)")
             }
         } catch {
-            printLog("Ошибка при сохранении списка классов: \(error.localizedDescription)")
+            printLog("Error saving class list: \(error.localizedDescription)")
         }
     }
     

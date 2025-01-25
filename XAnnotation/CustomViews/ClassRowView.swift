@@ -55,21 +55,21 @@ struct ClassRowView: View {
                 }
                 .popover(isPresented: isPopoverPresented) {
                     VStack {
-                        ColorPicker("Выберите цвет", selection: $selectedColor)
+                        ColorPicker("Select color", selection: $selectedColor)
                         
                         // Поле для редактирования имени класса
-                        TextField("Новое имя класса", text: $editedClassName)
+                        TextField("New class name", text: $editedClassName)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding(.top)
 
                         
-                        Button("Сохранить изменения") {
+                        Button("Save changes") {
                             saveChanges()
                         }
                         .disabled(editedClassName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                         .padding(.top)
                         
-                        Button("Закрыть") {
+                        Button("Close") {
                             editingClassID = nil
                             editedClassName = ""
                         }
@@ -87,18 +87,18 @@ struct ClassRowView: View {
                 }
         }
         .contextMenu {
-            Button("Редактировать имя") {
+            Button("Edit name") {
                 editingClassID = currentClassData.id
                 editedClassName = currentClassData.name
             }
-            Button("Удалить") {
+            Button("Delete") {
                 deleteClass()
             }
         }
         .padding(.vertical, 5)
         .contentShape(Rectangle())
         .alert(isPresented: $showAlert) {
-            Alert(title: Text("Ошибка"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+            Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
     }
     
@@ -111,7 +111,7 @@ struct ClassRowView: View {
         
         // 1. Проверка на пустое имя
         if trimmedName.isEmpty {
-            alertMessage = "Имя класса не может быть пустым."
+            alertMessage = "Class name cannot be empty."
             showAlert = true
             return
         }
@@ -119,30 +119,26 @@ struct ClassRowView: View {
         // 2. Проверка на уникальность имени
         let nameExists = classData.classList.contains { $0.name == trimmedName && $0.id != currentClassData.id }
         if nameExists {
-            alertMessage = "Имя класса уже существует."
+            alertMessage = "Class name already exists."
             showAlert = true
             return
         }
         
         // 3. Поиск индекса класса для редактирования
         guard let index = classData.classList.firstIndex(where: { $0.id == currentClassData.id }) else {
-            alertMessage = "Класс не найден."
+            alertMessage = "Class not found."
             showAlert = true
             return
         }
         
-        // Обновляем аннотации
-       // updateAnnotations(from: oldClassName, to: trimmedName)
-        
-        // 4. Обновление имени класса
+
         classData.classList[index].name = trimmedName
         currentClassData.color = ColorData.fromColor(selectedColor)
         saveClassListToFile()
         annotationsData.updateAnnotations(from: oldClassName, to: trimmedName)
-    //    if classData.selectedClass == nil {
         classData.selectedClass = classData.classList[index]
-   //     }
-        // Закрываем системную панель выбора цвета
+
+
         NSColorPanel.shared.close()
         editedClassName = ""
         editingClassID = nil
