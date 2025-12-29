@@ -307,7 +307,7 @@
       }
     },
     "Export proportions" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -325,7 +325,7 @@
     },
     "Export settings" : {
       "comment" : "Export settings",
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -358,7 +358,7 @@
       }
     },
     "Language" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -407,7 +407,7 @@
       }
     },
     "Navigation" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -440,7 +440,7 @@
       }
     },
     "Next Image" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -526,7 +526,7 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Projekt ‘%@’ geladen"
           }
         },
@@ -538,7 +538,7 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Проект ‘%@’ загружен"
           }
         }
@@ -658,7 +658,7 @@
     },
     "Settings" : {
       "comment" : "Settings",
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
